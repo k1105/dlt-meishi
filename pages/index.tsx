@@ -1,5 +1,17 @@
-"use client";
+import MeishiSketch from "@/components/MeishiSketch";
 import { useState } from "react";
+
+interface DisplayData {
+  position: {
+    x: number;
+    y: number;
+  };
+  size: string;
+  grid: {
+    type: string;
+    detailedness: number;
+  };
+}
 
 export default function Home() {
   const [question, setQuestion] = useState(
@@ -7,6 +19,17 @@ export default function Home() {
   );
   const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const [judgment, setJudgment] = useState("");
+
+  // ❶ data を useMemo で安定化させる
+  // 依存配列を空 ([]) にすると、初回だけ生成され、再レンダリングでも同じオブジェクトが返る
+  const [meishiData, setMeishiData] = useState<DisplayData>({
+    position: { x: 200, y: 100 },
+    size: "m",
+    grid: { type: "perspective", detailedness: 5 },
+  });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -18,11 +41,9 @@ export default function Home() {
         body: JSON.stringify({ question, answer }),
       });
 
-      console.log(response);
-
       const data = await response.json();
-      console.log("🔹 **判断基準（原因）**:", data.judgment);
-      console.log("🟢 **フォーマット（JSON）**:", data.jsonData);
+      setJudgment(data.judgment);
+      if (data.jsonData) setMeishiData(data.jsonData);
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -32,7 +53,6 @@ export default function Home() {
 
   return (
     <div style={{ padding: "20px", maxWidth: "600px", margin: "auto" }}>
-      <h1>デザインパターン生成</h1>
       <form onSubmit={handleSubmit}>
         <label>
           <strong>質問：</strong>
@@ -59,11 +79,24 @@ export default function Home() {
         <button
           type="submit"
           disabled={loading}
-          style={{ padding: "10px 20px" }}
+          style={{ padding: "10px 20px", marginRight: "10px" }}
         >
           {loading ? "生成中..." : "送信"}
         </button>
+        <button disabled={true} style={{ padding: "10px 20px" }}>
+          SVG出力 (未実装)
+        </button>
       </form>
+
+      {/* ❷ 安定化した meishiData を渡す */}
+      <MeishiSketch data={meishiData} />
+
+      {judgment && (
+        <div style={{ marginTop: "1rem", width: "100%" }}>
+          <h3>判断基準</h3>
+          <p style={{ fontSize: "0.8rem" }}>{judgment}</p>
+        </div>
+      )}
     </div>
   );
 }
