@@ -56,7 +56,7 @@ export default function Home() {
     <div style={{ padding: "20px", maxWidth: "600px", margin: "auto" }}>
       <form onSubmit={handleSubmit}>
         <label>
-          <strong>肩書き：</strong>
+          <strong>ビジネスタイトル：</strong>
           <input
             type="text"
             value={roll}
