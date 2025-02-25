@@ -15,7 +15,7 @@ interface DisplayData {
 
 export default function Home() {
   const [question, setQuestion] = useState(
-    "これだけは譲れないルールを教えてください。"
+    "あなたにとって、「これだけは譲れない」ということはなんですか。"
   );
   const [roll, setRoll] = useState("");
   const [answer, setAnswer] = useState("");
