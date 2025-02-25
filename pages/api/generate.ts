@@ -38,7 +38,9 @@ export default async function handler(
    - 回答が短く控えめ、あるいは非常に堅実である→\`xs\`  
    - 無難 or 少し行動的→\`s\` or \`m\`  
    - 強い語気・行動的→\`l\` or \`xl\`  
-4. **position.x は 0～455, position.y は 0～275。** 極端な回答なら端に寄せる(0, 455, etc.)。
+4. **position.x は 0～455, position.y は 0～275。**
+   - 明快さ、ボールドな印象、正統派の印象の場合は中央付近に配置する: x=225, y=140.
+   - ポジティブな印象の場合は右上、ネガティブな印象の場合は左下に配置する。
 5. **grid.type は isolation, grid, scale, perspective, column, hybrid の6種類のみ。**  
    - 「量的比較」→scale  
    - 「全体俯瞰」→perspective  
