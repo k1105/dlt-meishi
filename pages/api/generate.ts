@@ -15,13 +15,17 @@ export default async function handler(
     return res.status(405).json({ error: "Method Not Allowed" });
   }
 
-  const { question, answer } = req.body;
-  if (!question || !answer) {
+  const { question, answer, roll } = req.body;
+  if (!question || !answer || !roll) {
     return res.status(400).json({ error: "Missing question or answer" });
   }
 
   const prompt = `
-  以下の質問と回答に基づき、名刺のデザインパターンをフォーマットに則って出力してください。  
+  以下の質問と回答に基づき、名刺のデザインパターンをフォーマットに則って出力してください。
+  ただし、この名刺が以下の肩書きをもつ人の価値観や考え方を表現するものであると考えてください。
+
+  【肩書き】
+  "${roll}"
 
   【質問】  
   "${question}"  
@@ -36,6 +40,7 @@ export default async function handler(
   4. **ロゴの位置は x: 0-455, y: 0-275の範囲で決定すること。**
   5. **グリッドの type は isolation | grid | scale | perspective | column | hybrid から選ぶこと。ただし、【回答】の考え方や価値観を踏まえて決定すること。**  
   6. **グリッドの detailedness は 1〜10 の範囲で適切な値を設定すること。ただし、【回答】の文字数が多かったり、丁寧な印象の回答の場合は大きい数値を設定すること。**
+  7. **【回答】の内容に極端な表現が含まれる場合はロゴのサイズや位置も極端な値を選択すること。**
 
   #### **出力フォーマット**
   まず、判断基準（原因）を説明する。簡潔に記載すること!!!

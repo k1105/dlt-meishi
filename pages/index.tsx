@@ -17,6 +17,7 @@ export default function Home() {
   const [question, setQuestion] = useState(
     "これだけは譲れないルールを教えてください。"
   );
+  const [roll, setRoll] = useState("");
   const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -38,7 +39,7 @@ export default function Home() {
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question, answer }),
+        body: JSON.stringify({ question, answer, roll }),
       });
 
       const data = await response.json();
@@ -54,6 +55,15 @@ export default function Home() {
   return (
     <div style={{ padding: "20px", maxWidth: "600px", margin: "auto" }}>
       <form onSubmit={handleSubmit}>
+        <label>
+          <strong>肩書き：</strong>
+          <input
+            type="text"
+            value={roll}
+            onChange={(e) => setRoll(e.target.value)}
+            style={{ width: "100%", marginBottom: "10px", padding: "5px" }}
+          />
+        </label>
         <label>
           <strong>質問：</strong>
           <input
