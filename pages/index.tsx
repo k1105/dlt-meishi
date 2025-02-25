@@ -88,7 +88,7 @@ export default function Home() {
         </label>
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || !roll || !question || !answer}
           style={{ padding: "10px 20px", marginRight: "10px" }}
         >
           {loading ? "生成中..." : "送信"}
