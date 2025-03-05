@@ -76,8 +76,8 @@ export default async function handler(
    - 「一つの指針を考える人」→isolation  
    - 「きめ細やかな人」→hybrid
 6. **grid.detailedness は 1～10 で設定。**  
-   - 長文・丁寧な回答→大きめ（8～10）  
-   - 簡潔 or カジュアル→小さめ  
+   - 繊細な印象→ 8～10  
+   - 大胆、ざっくりした印象→ 2〜3 
 7. **極端な表現の場合: sizeをxsかxlにし、positionも端へ寄せる。**
 
 #### **出力フォーマット**
