@@ -15,39 +15,66 @@ export default async function handler(
     return res.status(405).json({ error: "Method Not Allowed" });
   }
 
-  const { question, answer, roll } = req.body;
-  if (!question || !answer || !roll) {
-    return res.status(400).json({ error: "Missing question or answer" });
+  const { question, roll, image } = req.body;
+
+  if (!question || !roll || !image) {
+    return res.status(400).json({ error: "Missing question, roll, or image" });
   }
 
-  const prompt = `
-以下の質問と回答に基づき、名刺デザインパターンをフォーマットに沿って出力してください。
+  try {
+    // **GPTに画像の内容を質問する**
+    const visionPrompt = "この画像には何が写っていますか？";
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o", // 画像解析が可能なモデル
+      messages: [
+        { role: "system", content: "あなたは画像を解析するAIです。" },
+        { role: "user", content: visionPrompt },
+        {
+          role: "user",
+          content: [
+            {
+              type: "image_url",
+              image_url: {
+                url: `data:image/jpeg;base64,${image}`,
+              },
+            },
+          ],
+        }, // Base64画像を送信
+      ],
+      max_tokens: 300,
+    });
+
+    const imageDescription =
+      response.choices[0].message?.content?.trim() ||
+      "画像の説明が取得できませんでした";
+
+    // **説明を既存の JSON 生成プロンプトに適用**
+    const finalPrompt = `
+以下の質問と、その質問を受けて得られた画像の情報に基づき、名刺デザインパターンを出力フォーマットに沿って出力してください。
 肩書き: "${roll}"
 
 【質問】  
 "${question}"
 
-【回答】  
-"${answer}"
+【画像の説明】  
+"${imageDescription}"
 
 #### **要件**
 
 1. **回答の特徴を簡潔に分析し、1～3行で「判断基準（原因）」を述べる。**
 2. **次に、TypeScript形式ではなく「JSON形式」で出力する。** ただし出力の中に説明文を混在させない。
-3. **ロゴサイズ (size) は必ず \`xs, s, m, l, xl\` のいずれか。**  
-   - 回答が短く控えめ、あるいは非常に堅実である→\`xs\`  
-   - 無難 or 少し行動的→\`s\` or \`m\`  
-   - 強い語気・行動的→\`l\` or \`xl\`  
+3. **ロゴサイズ (size) は必ず \ xs, s, m, l, xl\ のいずれか。**  
+   - 繊細な印象を受ける→\ xs\ or \ s\    
+   - 非常にポジティブな印象、ボールドな印象→\ l\ or \ xl\  
+   - 画像からは上記のような印象を受けない→\ m\
 4. **position.x は 0～455, position.y は 0～275。**
    - 明快さ、ボールドな印象、正統派の印象の場合は中央付近に配置する: x=225, y=140.
    - ポジティブな印象の場合は右上、ネガティブな印象の場合は左下に配置する。
-5. **grid.type は isolation, grid, scale, perspective, column, hybrid の6種類のみ。**  
-   - 「量的比較」→scale  
-   - 「全体俯瞰」→perspective  
-   - 「秩序」→grid  
-   - 「個性が強い」→isolation  
-   - 「文書構造」→column  
-   - 「多様性の混合」→hybrid
+5. **grid.type は isolation, perspective, hybrid の３種類のみ。**  
+   - 「チームワークが好きな人」→perspective
+   - 「一つの指針を考える人」→isolation  
+   - 「きめ細やかな人」→hybrid
 6. **grid.detailedness は 1～10 で設定。**  
    - 長文・丁寧な回答→大きめ（8～10）  
    - 簡潔 or カジュアル→小さめ  
@@ -61,23 +88,24 @@ export default async function handler(
 {
   "position": { "x": (数値0~455), "y": (数値0~275) },
   "size": "xs | s | m | l | xl",
-  "grid": { "type": "(isolation | grid | scale | perspective | column | hybrid)", "detailedness": (1~10) }
+  "grid": { "type": "(isolation | perspective | hybrid)", "detailedness": (1~10) }
 }
-\`\`\`
+`;
 
-    `;
-
-  try {
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [{ role: "user", content: prompt }],
+    // **OpenAI に最終プロンプトを送信**
+    const finalResponse = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [{ role: "user", content: finalPrompt }],
       max_tokens: 300,
     });
 
-    const resultText = response.choices[0].message?.content?.trim() || "";
-
+    const resultText = finalResponse.choices[0].message?.content?.trim() || "";
     const [judgment, jsonMatch] = resultText.split("```json");
+    console.log("Judgment:", judgment);
+    console.log("result", resultText);
+    console.log("JSON Match:", jsonMatch);
     const jsonDataStr = jsonMatch ? jsonMatch.replace("```", "").trim() : "{}";
+    console.log("JSON Data:", jsonDataStr);
 
     return res.status(200).json({
       judgment,
