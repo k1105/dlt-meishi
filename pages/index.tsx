@@ -1,6 +1,8 @@
+import MeishiOmoteSketch from "@/components/MeishiOmoteSketch";
+import MeishiUraSketch from "@/components/MeishiUraSketch";
 import Image from "next/image";
 import { useState } from "react";
-import MeishiSketch from "@/components/MeishiSketch";
+import styles from "./Home.module.css";
 
 interface DisplayData {
   position: {
@@ -18,7 +20,11 @@ export default function Home() {
   const [question, setQuestion] = useState(
     "好きな作品やデザインの画像を入れてください。"
   );
+  const [name, setName] = useState("");
   const [roll, setRoll] = useState("");
+  const [secondRoll, setSecondRoll] = useState("");
+  const [email, setEmail] = useState("");
+  const [tel, setTel] = useState("");
   const [preview, setPreview] = useState<string | null>(null); // リサイズ後のBase64を保持
   const [loading, setLoading] = useState(false);
   const [judgment, setJudgment] = useState("");
@@ -125,11 +131,47 @@ export default function Home() {
     <div style={{ padding: "20px", maxWidth: "600px", margin: "auto" }}>
       <form onSubmit={handleSubmit}>
         <label>
-          <strong>ビジネスタイトル：</strong>
+          <strong>名前（英語表記）：</strong>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            style={{ width: "100%", marginBottom: "10px", padding: "5px" }}
+          />
+        </label>
+        <label>
+          <strong>第１ビジネスタイトル：</strong>
           <input
             type="text"
             value={roll}
             onChange={(e) => setRoll(e.target.value)}
+            style={{ width: "100%", marginBottom: "10px", padding: "5px" }}
+          />
+        </label>
+        <label>
+          <strong>第２ビジネスタイトル：</strong>
+          <input
+            type="text"
+            value={secondRoll}
+            onChange={(e) => setSecondRoll(e.target.value)}
+            style={{ width: "100%", marginBottom: "10px", padding: "5px" }}
+          />
+        </label>
+        <label>
+          <strong>メールアドレス：</strong>
+          <input
+            type="text"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            style={{ width: "100%", marginBottom: "10px", padding: "5px" }}
+          />
+        </label>
+        <label>
+          <strong>電話番号：</strong>
+          <input
+            type="text"
+            value={tel}
+            onChange={(e) => setTel(e.target.value)}
             style={{ width: "100%", marginBottom: "10px", padding: "5px" }}
           />
         </label>
@@ -169,13 +211,21 @@ export default function Home() {
         <button
           type="submit"
           disabled={loading || !roll || !question || !preview}
-          style={{ padding: "10px 20px", marginRight: "10px" }}
+          style={{ height: "2rem", padding: "2px 20px", marginRight: "10px" }}
         >
           {loading ? "生成中..." : "送信"}
         </button>
+        {/* <button
+          disabled={loading || !roll || !question || !preview}
+          style={{ height: "2rem", padding: "2px 20px", marginRight: "10px" }}
+        >
+          SVG生成
+        </button> */}
       </form>
-
-      <MeishiSketch data={meishiData} />
+      <div className={styles.sketchContainer}>
+        <MeishiOmoteSketch data={{ name, roll, secondRoll, tel, email }} />
+        <MeishiUraSketch data={meishiData} />
+      </div>
 
       {judgment && (
         <div style={{ marginTop: "1rem", width: "100%" }}>

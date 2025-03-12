@@ -1,7 +1,9 @@
+"use client";
+
 import type { P5CanvasInstance } from "@p5-wrapper/react";
 import type { Image } from "p5";
 import { NextReactP5Wrapper } from "@p5-wrapper/next";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 
 interface DisplayData {
   position: {
@@ -15,8 +17,14 @@ interface DisplayData {
   };
 }
 
-export default function MeishiSketch({ data }: { data: DisplayData }) {
+export default function MeishiUraSketch({ data }: { data: DisplayData }) {
   // NextReactP5Wrapper を SSR 無効で動的にインポート
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      import("p5.js-svg");
+    }
+  }, []);
 
   // p5.js のスケッチ関数（インスタンスモード）
   const sketch = useCallback(
@@ -26,14 +34,14 @@ export default function MeishiSketch({ data }: { data: DisplayData }) {
       let displayData = data as DisplayData;
       // サイズリスト（ロゴサイズの定義）
       const sizeList: Record<string, number> = {
-        xl: 6,
-        l: 5,
-        m: 3,
-        s: 2,
-        xs: 1,
+        xl: 3,
+        l: 2.5,
+        m: 1.5,
+        s: 1,
+        xs: 0.5,
       };
 
-      const meishiSize = { w: 455, h: 275 };
+      const meishiSize = { w: 257.95, h: 155.91 };
       let logoImage: Image;
       let imageX: number, imageY: number;
 
@@ -46,7 +54,7 @@ export default function MeishiSketch({ data }: { data: DisplayData }) {
       };
 
       p.setup = function () {
-        p.createCanvas(610, 500);
+        p.createCanvas(266.54, 164.46);
         p.strokeCap(p.SQUARE);
       };
 
@@ -60,7 +68,7 @@ export default function MeishiSketch({ data }: { data: DisplayData }) {
         };
 
         p.noStroke();
-        p.background(150);
+        p.background(0);
         // Slider の値を表示
         p.textSize(15);
         imageX = displayData.position.x - logoSize.w / 2;
@@ -86,7 +94,7 @@ export default function MeishiSketch({ data }: { data: DisplayData }) {
         );
         p.translate(-meishiSize.w / 2, -meishiSize.h / 2);
         p.stroke(100);
-        p.strokeWeight(0.5);
+        p.strokeWeight(0.3);
 
         p.push();
         // グリッドのスタイルごとに描画処理を分岐
@@ -279,7 +287,7 @@ export default function MeishiSketch({ data }: { data: DisplayData }) {
         p.pop();
 
         // マスク用の長方形
-        p.fill(150);
+        p.fill(0);
         p.noStroke();
         p.rect(meishiSize.w, -p.height, p.width, 2 * p.height);
         p.push();
@@ -294,6 +302,9 @@ export default function MeishiSketch({ data }: { data: DisplayData }) {
         );
         p.pop();
         p.pop();
+
+        // p.save("meishi_ura.svg");
+        p.noLoop();
       };
     },
     [data]

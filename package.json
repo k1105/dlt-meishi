@@ -14,13 +14,14 @@
     "@types/p5": "^1.7.6",
     "dotenv": "^16.4.7",
     "next": "14.2.7",
+    "openai": "^4.85.2",
+    "p5": "^1.11.3",
+    "p5.js-svg": "^1.5.1",
     "papaparse": "^5.4.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-webcam": "^7.2.0",
-    "typescript": "5.5.4",
-    "openai": "^4.85.2",
-    "p5": "^1.11.3"
+    "typescript": "5.5.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
