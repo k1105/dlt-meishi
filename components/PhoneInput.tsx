@@ -74,7 +74,7 @@ export default function PhoneInput({ setPhoneNumber }: PhoneInputProps) {
           value={tel}
           onChange={handlePhoneChange}
           onBlur={handleBlur} // フォーカスが外れたときにフォーマット適用
-          placeholder="例: 090-1234-5678"
+          placeholder="例: 80-1234-5678"
           style={{ flex: 1, padding: "5px" }}
         />
       </div>
