@@ -135,7 +135,7 @@ export default function Home() {
           <input
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => setName(e.target.value.toUpperCase())}
             style={{ width: "100%", marginBottom: "10px", padding: "5px" }}
           />
         </label>
@@ -144,7 +144,7 @@ export default function Home() {
           <input
             type="text"
             value={roll}
-            onChange={(e) => setRoll(e.target.value)}
+            onChange={(e) => setRoll(e.target.value.toUpperCase())}
             style={{ width: "100%", marginBottom: "10px", padding: "5px" }}
           />
         </label>
@@ -153,7 +153,7 @@ export default function Home() {
           <input
             type="text"
             value={secondRoll}
-            onChange={(e) => setSecondRoll(e.target.value)}
+            onChange={(e) => setSecondRoll(e.target.value.toUpperCase())}
             style={{ width: "100%", marginBottom: "10px", padding: "5px" }}
           />
         </label>
@@ -215,12 +215,6 @@ export default function Home() {
         >
           {loading ? "生成中..." : "送信"}
         </button>
-        {/* <button
-          disabled={loading || !roll || !question || !preview}
-          style={{ height: "2rem", padding: "2px 20px", marginRight: "10px" }}
-        >
-          SVG生成
-        </button> */}
       </form>
       <div className={styles.sketchContainer}>
         <MeishiOmoteSketch data={{ name, roll, secondRoll, tel, email }} />
