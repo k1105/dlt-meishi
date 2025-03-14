@@ -1,5 +1,5 @@
 // pages/api/generate.ts
-import type { NextApiRequest, NextApiResponse } from "next";
+import type {NextApiRequest, NextApiResponse} from "next";
 import OpenAI from "openai";
 
 const openai = new OpenAI({
@@ -12,13 +12,16 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method Not Allowed" });
+    return res.status(405).json({error: "Method Not Allowed"});
   }
 
-  const { question, roll, image } = req.body;
+  const {question, roll, image} = req.body;
+
+  console.log("送信されたデータ:", {question, roll});
+  console.log("送信される画像データ:", image.substring(0, 100)); // 100文字まで表示
 
   if (!question || !roll || !image) {
-    return res.status(400).json({ error: "Missing question, roll, or image" });
+    return res.status(400).json({error: "Missing question, roll, or image"});
   }
 
   try {
@@ -28,8 +31,8 @@ export default async function handler(
     const response = await openai.chat.completions.create({
       model: "gpt-4o", // 画像解析が可能なモデル
       messages: [
-        { role: "system", content: "あなたは画像を解析するAIです。" },
-        { role: "user", content: visionPrompt },
+        {role: "system", content: "あなたは画像を解析するAIです。"},
+        {role: "user", content: visionPrompt},
         {
           role: "user",
           content: [
@@ -95,7 +98,7 @@ export default async function handler(
     // **OpenAI に最終プロンプトを送信**
     const finalResponse = await openai.chat.completions.create({
       model: "gpt-4o",
-      messages: [{ role: "user", content: finalPrompt }],
+      messages: [{role: "user", content: finalPrompt}],
       max_tokens: 300,
     });
 
@@ -113,6 +116,6 @@ export default async function handler(
     });
   } catch (error) {
     console.error("Error generating response:", error);
-    return res.status(500).json({ error: "Error generating response" });
+    return res.status(500).json({error: "Error generating response"});
   }
 }

@@ -1,9 +1,10 @@
 import MeishiOmoteSketch from "@/components/MeishiOmoteSketch";
 import MeishiUraSketch from "@/components/MeishiUraSketch";
 import Image from "next/image";
-import { useState } from "react";
+import {useState} from "react";
 import PhoneInput from "@/components/PhoneInput"; // 追加
 import styles from "./Home.module.css";
+import {handleImageChange} from "@/lib/handleImageChange";
 
 interface DisplayData {
   position: {
@@ -30,9 +31,9 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [judgment, setJudgment] = useState("");
   const [meishiData, setMeishiData] = useState<DisplayData>({
-    position: { x: 200, y: 100 },
+    position: {x: 200, y: 100},
     size: "m",
-    grid: { type: "perspective", detailedness: 5 },
+    grid: {type: "perspective", detailedness: 5},
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -53,13 +54,14 @@ export default function Home() {
         roll,
         secondRoll,
         email,
+        question,
         phoneNumber, // ここで国コード付きの番号を送信
         image: base64Image,
       };
 
       const response = await fetch("/api/generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify(requestData),
       });
 
@@ -74,7 +76,7 @@ export default function Home() {
   };
 
   return (
-    <div style={{ padding: "20px", maxWidth: "600px", margin: "auto" }}>
+    <div style={{padding: "20px", maxWidth: "600px", margin: "auto"}}>
       <form onSubmit={handleSubmit}>
         <label>
           <strong>名前（英語表記）：</strong>
@@ -82,7 +84,7 @@ export default function Home() {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value.toUpperCase())}
-            style={{ width: "100%", marginBottom: "10px", padding: "5px" }}
+            style={{width: "100%", marginBottom: "10px", padding: "5px"}}
           />
         </label>
         <label>
@@ -91,7 +93,7 @@ export default function Home() {
             type="text"
             value={roll}
             onChange={(e) => setRoll(e.target.value.toUpperCase())}
-            style={{ width: "100%", marginBottom: "10px", padding: "5px" }}
+            style={{width: "100%", marginBottom: "10px", padding: "5px"}}
           />
         </label>
         <label>
@@ -100,7 +102,7 @@ export default function Home() {
             type="text"
             value={secondRoll}
             onChange={(e) => setSecondRoll(e.target.value.toUpperCase())}
-            style={{ width: "100%", marginBottom: "10px", padding: "5px" }}
+            style={{width: "100%", marginBottom: "10px", padding: "5px"}}
           />
         </label>
         <label>
@@ -109,7 +111,7 @@ export default function Home() {
             type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            style={{ width: "100%", marginBottom: "10px", padding: "5px" }}
+            style={{width: "100%", marginBottom: "10px", padding: "5px"}}
           />
         </label>
 
@@ -122,7 +124,7 @@ export default function Home() {
             type="text"
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
-            style={{ width: "100%", marginBottom: "10px", padding: "5px" }}
+            style={{width: "100%", marginBottom: "10px", padding: "5px"}}
           />
         </label>
 
@@ -131,29 +133,20 @@ export default function Home() {
           <input
             type="file"
             accept="image/*"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (!file) return;
-
-              const reader = new FileReader();
-              reader.onload = () => {
-                setPreview(reader.result as string);
-              };
-              reader.readAsDataURL(file);
-            }}
-            style={{ width: "100%", marginBottom: "10px", padding: "5px" }}
+            onChange={(e) => handleImageChange(e, setPreview)}
+            style={{width: "100%", marginBottom: "10px", padding: "5px"}}
           />
         </label>
 
         {preview && (
           <div>
             <strong>プレビュー：</strong>
-            <div style={{ position: "relative", height: "300px" }}>
+            <div style={{position: "relative", height: "300px"}}>
               <Image
                 src={preview}
                 alt="選択した画像"
                 fill
-                style={{ objectFit: "contain" }}
+                style={{objectFit: "contain"}}
               />
             </div>
           </div>
@@ -164,7 +157,7 @@ export default function Home() {
           disabled={
             loading || !roll || !name || !email || !phoneNumber || !preview
           }
-          style={{ height: "2rem", padding: "2px 20px", marginRight: "10px" }}
+          style={{height: "2rem", padding: "2px 20px", marginRight: "10px"}}
         >
           {loading ? "生成中..." : "送信"}
         </button>
@@ -172,15 +165,15 @@ export default function Home() {
 
       <div className={styles.sketchContainer}>
         <MeishiOmoteSketch
-          data={{ name, roll, secondRoll, tel: phoneNumber, email }}
+          data={{name, roll, secondRoll, tel: phoneNumber, email}}
         />
         <MeishiUraSketch data={meishiData} />
       </div>
 
       {judgment && (
-        <div style={{ marginTop: "1rem", width: "100%" }}>
+        <div style={{marginTop: "1rem", width: "100%"}}>
           <h3>判断基準</h3>
-          <p style={{ fontSize: "0.8rem" }}>{judgment}</p>
+          <p style={{fontSize: "0.8rem"}}>{judgment}</p>
         </div>
       )}
     </div>
