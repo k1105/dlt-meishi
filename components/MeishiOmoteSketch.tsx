@@ -1,25 +1,17 @@
-import type { P5CanvasInstance } from "@p5-wrapper/react";
-import { NextReactP5Wrapper } from "@p5-wrapper/next";
-import { useCallback } from "react";
+import type {P5CanvasInstance} from "@p5-wrapper/react";
+import {NextReactP5Wrapper} from "@p5-wrapper/next";
+import {useCallback} from "react";
 
-interface DisplayData {
-  name: string;
-  roll: string;
-  secondRoll: string;
-  tel: string;
-  email: string;
-}
-
-export default function MeishiOmoteSketch({ data }: { data: DisplayData }) {
+export default function MeishiOmoteSketch({data}: {data: ProfileData}) {
   // p5.js のスケッチ関数（インスタンスモード）
   const sketch = useCallback(
     (p: P5CanvasInstance) => {
-      let displayData = data as DisplayData;
-      const meishiSize = { w: 257.95, h: 155.91 };
+      let displayData = data as ProfileData;
+      const meishiSize = {w: 257.95, h: 155.91};
 
       // Props 更新時にデータを再代入
       p.updateWithProps = (props) => {
-        displayData = props.data as DisplayData;
+        displayData = props.data as ProfileData;
       };
 
       p.setup = function () {
@@ -88,7 +80,7 @@ export default function MeishiOmoteSketch({ data }: { data: DisplayData }) {
   );
 
   return (
-    <div style={{ marginTop: "1rem" }}>
+    <div style={{marginTop: "1rem"}}>
       {/* NextReactP5Wrapper は SSR 無効化のために dynamic import 推奨 */}
       <NextReactP5Wrapper sketch={sketch} data={data} />
     </div>

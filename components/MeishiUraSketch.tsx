@@ -1,23 +1,11 @@
 "use client";
 
-import type { P5CanvasInstance } from "@p5-wrapper/react";
-import type { Image } from "p5";
-import { NextReactP5Wrapper } from "@p5-wrapper/next";
-import { useCallback, useEffect } from "react";
+import type {P5CanvasInstance} from "@p5-wrapper/react";
+import type {Image} from "p5";
+import {NextReactP5Wrapper} from "@p5-wrapper/next";
+import {useCallback, useEffect} from "react";
 
-interface DisplayData {
-  position: {
-    x: number;
-    y: number;
-  };
-  size: string;
-  grid: {
-    type: string;
-    detailedness: number;
-  };
-}
-
-export default function MeishiUraSketch({ data }: { data: DisplayData }) {
+export default function MeishiUraSketch({data}: {data: PatternData}) {
   // NextReactP5Wrapper を SSR 無効で動的にインポート
 
   useEffect(() => {
@@ -31,7 +19,7 @@ export default function MeishiUraSketch({ data }: { data: DisplayData }) {
     (p: P5CanvasInstance) => {
       // p.data は P5Wrapper から渡される data プロパティです。
       // 例：{ position: { x: 220, y: 160 }, size: "m", grid: { type: "scale", detailedness: 6 } }
-      let displayData = data as DisplayData;
+      let displayData = data as PatternData;
       // サイズリスト（ロゴサイズの定義）
       const sizeList: Record<string, number> = {
         xl: 3,
@@ -41,12 +29,12 @@ export default function MeishiUraSketch({ data }: { data: DisplayData }) {
         xs: 0.5,
       };
 
-      const meishiSize = { w: 257.95, h: 155.91 };
+      const meishiSize = {w: 257.95, h: 155.91};
       let logoImage: Image;
       let imageX: number, imageY: number;
 
       p.updateWithProps = (props) => {
-        displayData = props.data as DisplayData;
+        displayData = props.data as PatternData;
       };
 
       p.preload = function () {
@@ -77,10 +65,10 @@ export default function MeishiUraSketch({ data }: { data: DisplayData }) {
         imageY = p.max(0, p.min(imageY, meishiSize.h - logoSize.h));
 
         const rectCorners = {
-          lt: { x: imageX, y: imageY },
-          lb: { x: imageX, y: imageY + logoSize.h },
-          rt: { x: imageX + logoSize.w, y: imageY },
-          rb: { x: imageX + logoSize.w, y: imageY + logoSize.h },
+          lt: {x: imageX, y: imageY},
+          lb: {x: imageX, y: imageY + logoSize.h},
+          rt: {x: imageX + logoSize.w, y: imageY},
+          rb: {x: imageX + logoSize.w, y: imageY + logoSize.h},
         };
 
         // 名刺のベースとなる矩形を描く
@@ -267,22 +255,24 @@ export default function MeishiUraSketch({ data }: { data: DisplayData }) {
           p.line(0, rectCorners.rb.y, rectCorners.rb.x, rectCorners.rb.y);
           let step = 1;
           const unitSize = (meishiSize.w - rectCorners.rt.x) / 2 / detailedness;
-          p.translate(rectCorners.rt.x, rectCorners.rt.y);
-          p.push();
-          while (step * unitSize < meishiSize.w - rectCorners.rt.x) {
-            p.translate(unitSize, 0);
-            p.line(0, 0, 0, meishiSize.h - rectCorners.rt.y);
-            step++;
+          if (unitSize !== 0) {
+            p.translate(rectCorners.rt.x, rectCorners.rt.y);
+            p.push();
+            while (step * unitSize < meishiSize.w - rectCorners.rt.x) {
+              p.translate(unitSize, 0);
+              p.line(0, 0, 0, meishiSize.h - rectCorners.rt.y);
+              step++;
+            }
+            p.pop();
+            p.push();
+            step = 1;
+            while (step * unitSize < meishiSize.h - rectCorners.rt.y) {
+              p.translate(0, unitSize);
+              p.line(0, 0, meishiSize.w - rectCorners.rt.x, 0);
+              step++;
+            }
+            p.pop();
           }
-          p.pop();
-          p.push();
-          step = 1;
-          while (step * unitSize < meishiSize.h - rectCorners.rt.y) {
-            p.translate(0, unitSize);
-            p.line(0, 0, meishiSize.w - rectCorners.rt.x, 0);
-            step++;
-          }
-          p.pop();
         }
         p.pop();
 
@@ -311,7 +301,7 @@ export default function MeishiUraSketch({ data }: { data: DisplayData }) {
   );
 
   return (
-    <div style={{ marginTop: "1rem" }}>
+    <div style={{marginTop: "1rem"}}>
       <NextReactP5Wrapper sketch={sketch} data={data} />
     </div>
   );
