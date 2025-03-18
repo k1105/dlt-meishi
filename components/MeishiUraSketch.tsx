@@ -3,16 +3,10 @@
 import type {P5CanvasInstance} from "@p5-wrapper/react";
 import type {Image} from "p5";
 import {NextReactP5Wrapper} from "@p5-wrapper/next";
-import {useCallback, useEffect} from "react";
+import {useCallback} from "react";
 
 export default function MeishiUraSketch({data}: {data: PatternData}) {
   // NextReactP5Wrapper を SSR 無効で動的にインポート
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      import("p5.js-svg");
-    }
-  }, []);
 
   // p5.js のスケッチ関数（インスタンスモード）
   const sketch = useCallback(
@@ -143,24 +137,6 @@ export default function MeishiUraSketch({data}: {data: PatternData}) {
             rectCorners.rb.y
           );
           p.rect(imageX, imageY, logoSize.w, logoSize.h);
-        } else if (styleType === "grid") {
-          let step = 1;
-          const unitSize = meishiSize.w / 2 / detailedness;
-          p.push();
-          while (step * unitSize < meishiSize.w) {
-            p.translate(unitSize, 0);
-            p.line(0, 0, 0, meishiSize.h);
-            step++;
-          }
-          p.pop();
-          p.push();
-          step = 1;
-          while (step * unitSize < meishiSize.h) {
-            p.translate(0, unitSize);
-            p.line(0, 0, meishiSize.w, 0);
-            step++;
-          }
-          p.pop();
         } else if (styleType === "isolation") {
           p.push();
           p.line(
@@ -236,18 +212,6 @@ export default function MeishiUraSketch({data}: {data: PatternData}) {
             meishiSize.h
           );
           p.pop();
-        } else if (styleType === "column") {
-          p.line(0, rectCorners.rt.y, meishiSize.w, rectCorners.rt.y);
-          p.line(0, rectCorners.rb.y, meishiSize.w, rectCorners.rb.y);
-          p.translate(rectCorners.lt.x, 0);
-          p.line(0, 0, 0, meishiSize.h);
-          p.line(logoSize.w, 0, logoSize.w, meishiSize.h);
-          for (let i = 0; i < 10; i++) {
-            p.translate(logoSize.w, 0);
-            p.translate(logoSize.w / 3, 0);
-            p.line(0, 0, 0, meishiSize.h);
-            p.line(logoSize.w, 0, logoSize.w, meishiSize.h);
-          }
         } else if (styleType === "hybrid") {
           p.line(rectCorners.lt.x, 0, rectCorners.lt.x, meishiSize.h);
           p.line(rectCorners.rt.x, 0, rectCorners.rt.x, meishiSize.h);
