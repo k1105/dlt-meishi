@@ -71,8 +71,8 @@ export default async function handler(
    - 繊細な印象を受ける→\ xs\ or \ s\    
    - 非常にポジティブな印象、ボールドな印象→\ l\ or \ xl\  
    - 画像からは上記のような印象を受けない→\ m\
-4. **position.x は 0～455, position.y は 0～275。**
-   - 明快さ、ボールドな印象、正統派の印象の場合は中央付近に配置する: x=225, y=140.
+4. **position.x は 0～256, position.y は 0～156。**
+   - 明快さ、ボールドな印象、正統派の印象の場合は中央付近に配置する: x=128, y=78.
    - ポジティブな印象の場合は右上、ネガティブな印象の場合は左下に配置する。
 5. **grid.type は isolation, perspective, hybrid の３種類のみ。**  
    - 「チームワークが好きな人」→perspective

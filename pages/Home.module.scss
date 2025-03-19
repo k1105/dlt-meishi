@@ -1,0 +1,232 @@
+.sketchContainer {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.main {
+  margin: auto;
+  display: flex;
+  height: 78vh;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+}
+
+.leftSideContainer,
+.rightSideContainer {
+  width: 50vw;
+  height: 78vh;
+}
+
+.rightSideContainer {
+  padding: 1rem;
+}
+
+.leftSideContainer {
+  border-right: 1px solid black;
+  padding: 3rem;
+  padding-bottom: 10rem;
+  overflow-y: scroll;
+}
+
+.inputFormWrapper,
+.confirmTextWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.label {
+  background-color: var(--light-gray);
+  padding: 0.5rem;
+  display: inline-block;
+  margin-bottom: 1rem;
+  small {
+    margin: 0 2rem;
+    font-size: 0.7rem;
+  }
+}
+
+.questionText {
+  font-weight: 700;
+  margin-top: 9vh;
+  font-size: 1.5rem;
+}
+
+.verticalGridLayer {
+  z-index: -1;
+  position: fixed;
+  left: 3rem;
+  width: calc(25vw - 3rem);
+  bottom: 0;
+  height: 78vh;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+}
+
+.holizonalGridLayer {
+  z-index: -1;
+  position: fixed;
+  left: 0;
+  top: 43vh;
+  width: 50vw;
+  height: 22vh;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.imageWrapper {
+  position: fixed;
+  z-index: -10;
+  left: 3rem;
+  top: 43vh;
+  width: calc(25vw - 3rem);
+  height: 22vh;
+  overflow: hidden;
+
+  // 2本の斜め線を引きたいので、::before と ::after の2つ使う
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  // 左上→右下
+  &::before {
+    background: linear-gradient(
+      to bottom right,
+      /* 50%手前までは透明 */ transparent calc(50% - 0.5px),
+      /* 2pxぶん黒 */ black calc(50% - 0.5px),
+      black calc(50% + 0.5px),
+      /* あとは透明 */ transparent calc(50% + 0.5px)
+    );
+  }
+
+  // 右上→左下
+  &::after {
+    z-index: -1;
+    background: linear-gradient(
+      to top right,
+      transparent calc(50% - 0.5px),
+      black calc(50% - 0.5px),
+      black calc(50% + 0.5px),
+      transparent calc(50% + 0.5px)
+    );
+  }
+}
+
+.fileSelectButton {
+  cursor: pointer;
+  position: fixed;
+  left: 3rem;
+  top: 65vh;
+  background-color: black;
+  color: white;
+  height: 4rem;
+  font-weight: bold;
+  line-height: 4rem;
+  padding: 0 1.5rem;
+}
+
+.confirmText {
+  line-height: 5rem;
+  border-bottom: 1px solid black;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+}
+
+.confirmText,
+.inputForm {
+  height: 5rem;
+  padding: 0 1rem;
+  font-size: 1.5rem;
+  width: 70%;
+  display: block;
+}
+
+.backLink {
+  cursor: pointer;
+  position: fixed;
+  bottom: 0;
+  left: 3rem;
+  height: 5rem;
+  line-height: 5rem;
+  padding-left: 2rem;
+  p::before {
+    content: "←";
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+.judgement {
+  width: calc(25vw - 3rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.nextButton {
+  cursor: pointer;
+  padding: 0 3rem;
+  height: 5rem;
+  font-size: 1.5rem;
+  background-color: black;
+  border: none;
+  color: white;
+  position: fixed;
+  bottom: 0;
+  right: 50vw;
+  transition: opacity 300ms ease;
+  &.disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
+}
+
+.preview {
+  height: 100%;
+  background-color: var(--light-gray);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2rem;
+  align-items: center;
+}
+
+.completionMessageContainer {
+  margin-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+
+  .headlineContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    .headlineEn {
+      font-size: 2.3rem;
+    }
+
+    .headlineJa {
+      font-size: 1.5rem;
+    }
+  }
+
+  .noteContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    .noteEn {
+      font-size: 1.2rem;
+      line-height: 2rem;
+    }
+  }
+}
