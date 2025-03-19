@@ -7,7 +7,7 @@
 .main {
   margin: auto;
   display: flex;
-  height: 78vh;
+  height: 85vh;
   position: fixed;
   left: 0;
   bottom: 0;
@@ -16,7 +16,7 @@
 .leftSideContainer,
 .rightSideContainer {
   width: 50vw;
-  height: 78vh;
+  height: 85vh;
 }
 
 .rightSideContainer {
@@ -60,7 +60,7 @@
   left: 3rem;
   width: calc(25vw - 3rem);
   bottom: 0;
-  height: 78vh;
+  height: 85vh;
   border-left: 1px solid black;
   border-right: 1px solid black;
 }
