@@ -7,8 +7,11 @@ import PhoneInput from "@/components/PhoneInput";
 import Layout from "./layout";
 import styles from "./Home.module.scss";
 import {Inter} from "next/font/google";
+import {IBM_Plex_Mono} from "next/font/google";
 
+// const interBold = Inter({subsets: ["latin"], weight: "700"});
 const inter = Inter({subsets: ["latin"], weight: "400"});
+const ibmPlexMono = IBM_Plex_Mono({subsets: ["latin"], weight: "500"});
 
 export default function Home() {
   const [step, setStep] = useState<number>(1);
@@ -137,7 +140,8 @@ export default function Home() {
               <div className={styles.inputFormWrapper}>
                 <label>
                   <p className={styles.label}>
-                    Name <small>名前</small>
+                    <span className={ibmPlexMono.className}>Name</span>{" "}
+                    <small>名前</small>
                   </p>
                   <input
                     type="text"
@@ -150,7 +154,10 @@ export default function Home() {
 
                 <label>
                   <p className={styles.label}>
-                    Business Title(Primary) <small>第１ビジネスタイトル</small>
+                    <span className={ibmPlexMono.className}>
+                      Business Title(Primary)
+                    </span>{" "}
+                    <small>第１ビジネスタイトル</small>
                   </p>
                   <input
                     type="text"
@@ -163,7 +170,9 @@ export default function Home() {
 
                 <label>
                   <p className={styles.label}>
-                    Business Title(Secondary)
+                    <span className={ibmPlexMono.className}>
+                      Business Title(Secondary)
+                    </span>
                     <small>第２ビジネスタイトル</small>
                   </p>
                   <input
@@ -178,7 +187,8 @@ export default function Home() {
 
                 <label>
                   <p className={styles.label}>
-                    Mail <small>メールアドレス</small>
+                    <span className={ibmPlexMono.className}>Mail</span>{" "}
+                    <small>メールアドレス</small>
                   </p>
                   <input
                     type="email"
@@ -279,32 +289,41 @@ export default function Home() {
             <div className={styles.confirmTextWrapper}>
               <div>
                 <p className={styles.label}>
-                  Name <small>名前</small>
+                  <span className={ibmPlexMono.className}>Name</span>{" "}
+                  <small>名前</small>
                 </p>
                 <p className={styles.confirmText}>{name}</p>
               </div>
 
               <div>
                 <p className={styles.label}>
-                  Business Title(Primary) <small>第１ビジネスタイトル</small>
+                  <span className={ibmPlexMono.className}>
+                    Business Title(Primary)
+                  </span>{" "}
+                  <small>第１ビジネスタイトル</small>
                 </p>
                 <p className={styles.confirmText}>{roll}</p>
               </div>
               <div>
                 <p className={styles.label}>
-                  Business Title(Secondary) <small>第２ビジネスタイトル</small>
+                  <span className={ibmPlexMono.className}>
+                    Business Title(Secondary)
+                  </span>{" "}
+                  <small>第２ビジネスタイトル</small>
                 </p>
                 <p className={styles.confirmText}>{secondRoll}</p>
               </div>
               <div>
                 <p className={styles.label}>
-                  Mail <small>メールアドレス</small>
+                  <span className={ibmPlexMono.className}>Mail</span>{" "}
+                  <small>メールアドレス</small>
                 </p>
                 <p className={styles.confirmText}>{email}</p>
               </div>
               <div>
                 <p className={styles.label}>
-                  Tel <small>電話番号</small>
+                  <span className={ibmPlexMono.className}>Tel</span>{" "}
+                  <small>電話番号</small>
                 </p>
                 <p
                   className={styles.confirmText}

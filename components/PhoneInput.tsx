@@ -1,6 +1,8 @@
 import Select from "react-select";
 import styles from "@/pages/Home.module.scss";
 import {Dispatch, SetStateAction} from "react";
+import {IBM_Plex_Mono} from "next/font/google";
+const ibmPlexMono = IBM_Plex_Mono({subsets: ["latin"], weight: "500"});
 
 const countryOptions = [
   {value: "+81", label: "🇯🇵 +81 (Japan)"},
@@ -66,7 +68,8 @@ export default function PhoneInput({phone, setPhone}: PhoneInputProps) {
   return (
     <label>
       <p className={styles.label}>
-        Tel <small>電話番号</small>
+        <span className={ibmPlexMono.className}>Tel</span>{" "}
+        <small>電話番号</small>
       </p>
       <div style={{display: "flex", flexDirection: "column", gap: "10px"}}>
         <Select
