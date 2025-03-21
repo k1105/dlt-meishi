@@ -237,7 +237,7 @@ export default function Home() {
               <div className={styles.holizonalGridLayer} />
               {judgement ? (
                 <div className={styles.judgement}>
-                  <h3>デザインの理由</h3>
+                  <h3>あなたについて</h3>
                   <p>{judgement}</p>
                 </div>
               ) : (
