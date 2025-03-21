@@ -1,6 +1,7 @@
 import type {P5CanvasInstance} from "@p5-wrapper/react";
 import {NextReactP5Wrapper} from "@p5-wrapper/next";
 import {useCallback} from "react";
+// import p5Types from "p5";
 
 export default function MeishiOmoteSketch({
   data,
@@ -10,15 +11,20 @@ export default function MeishiOmoteSketch({
   scale: number;
 }) {
   const baseScale = 2;
-  // p5.js のスケッチ関数（インスタンスモード）
+
   const sketch = useCallback(
     (p: P5CanvasInstance) => {
       let displayData = data as ProfileData;
       const meishiSize = {w: 257.95 * baseScale, h: 155.91 * baseScale};
+      // let font: p5Types.Font;
 
       // Props 更新時にデータを再代入
       p.updateWithProps = (props) => {
         displayData = props.data as ProfileData;
+      };
+
+      p.preload = () => {
+        // font = p.loadFont("/fonts/IBMPlexMono-Regular.ttf");
       };
 
       p.setup = function () {
@@ -38,7 +44,7 @@ export default function MeishiOmoteSketch({
         // メインのテキスト
         p.fill(35, 24, 21);
         p.textSize(16.03 * baseScale);
-        p.textFont("Helvetica");
+        // p.textFont(font);
         p.text(displayData.name, 12.68 * baseScale, 35.65 * baseScale);
 
         // Email

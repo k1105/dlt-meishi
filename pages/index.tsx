@@ -29,7 +29,8 @@ export default function Home() {
   });
   const [email, setEmail] = useState<string>("");
   const [isFrontDataValid, setIsFrontDataValid] = useState<boolean>(false);
-  const question = "好きな作品やデザインの画像を入れてください。";
+  const question =
+    "きっと自分だけが「いいな」と感じているものの写真を入れてください。";
   const [hadValidJsonData, setHasValidJsonData] = useState<boolean>(false);
   const [judgement, setJudgement] = useState("");
 
@@ -240,7 +241,12 @@ export default function Home() {
                   <p>{judgement}</p>
                 </div>
               ) : (
-                <p className={styles.questionText}>{question}</p>
+                <div>
+                  <p className={styles.questionText}>{question}</p>
+                  <p>
+                    写真から抽出された特徴をもとに、裏面のデザインを生成します。
+                  </p>
+                </div>
               )}
               {/* 見えないinput */}
               <input
