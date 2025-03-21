@@ -5,9 +5,15 @@ import type {Image} from "p5";
 import {NextReactP5Wrapper} from "@p5-wrapper/next";
 import {useCallback} from "react";
 
-export default function MeishiUraSketch({data}: {data: PatternData}) {
+export default function MeishiUraSketch({
+  data,
+  scale,
+}: {
+  data: PatternData;
+  scale: number;
+}) {
+  const baseScale = 2;
   // NextReactP5Wrapper を SSR 無効で動的にインポート
-
   // p5.js のスケッチ関数（インスタンスモード）
   const sketch = useCallback(
     (p: P5CanvasInstance) => {
@@ -16,14 +22,14 @@ export default function MeishiUraSketch({data}: {data: PatternData}) {
       let displayData = data as PatternData;
       // サイズリスト（ロゴサイズの定義）
       const sizeList: Record<string, number> = {
-        xl: 3,
-        l: 2.5,
-        m: 1.5,
-        s: 1,
-        xs: 0.5,
+        xl: 3 * baseScale,
+        l: 2.5 * baseScale,
+        m: 1.5 * baseScale,
+        s: 1 * baseScale,
+        xs: 0.5 * baseScale,
       };
 
-      const meishiSize = {w: 257.95, h: 155.91};
+      const meishiSize = {w: 257.95 * baseScale, h: 155.91 * baseScale};
       let logoImage: Image;
       let imageX: number, imageY: number;
 
@@ -36,7 +42,7 @@ export default function MeishiUraSketch({data}: {data: PatternData}) {
       };
 
       p.setup = function () {
-        p.createCanvas(266.54, 164.46);
+        p.createCanvas(266.54 * baseScale, 164.46 * baseScale);
         p.strokeCap(p.SQUARE);
       };
 
@@ -53,8 +59,8 @@ export default function MeishiUraSketch({data}: {data: PatternData}) {
         p.background(230);
         // Slider の値を表示
         p.textSize(15);
-        imageX = displayData.position.x - logoSize.w / 2;
-        imageY = displayData.position.y - logoSize.h / 2;
+        imageX = displayData.position.x * baseScale - logoSize.w / 2;
+        imageY = displayData.position.y * baseScale - logoSize.h / 2;
         imageX = p.max(0, p.min(imageX, meishiSize.w - logoSize.w));
         imageY = p.max(0, p.min(imageY, meishiSize.h - logoSize.h));
 
@@ -265,7 +271,15 @@ export default function MeishiUraSketch({data}: {data: PatternData}) {
   );
 
   return (
-    <div style={{marginTop: "1rem"}}>
+    <div
+      style={{
+        width: `${266.54 * baseScale * scale}px`,
+        height: `${164.46 * baseScale * scale}px`,
+        transformOrigin: "top left",
+        transform: `scale(${scale})`,
+        transition: "all 1s ease",
+      }}
+    >
       <NextReactP5Wrapper sketch={sketch} data={data} />
     </div>
   );

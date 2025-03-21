@@ -15,6 +15,8 @@ const ibmPlexMono = IBM_Plex_Mono({subsets: ["latin"], weight: "500"});
 
 export default function Home() {
   const [step, setStep] = useState<number>(1);
+  const [omoteScale, setOmoteScale] = useState<number>(1);
+  const [uraScale, setUraScale] = useState<number>(1 / 3);
   const [name, setName] = useState<string>("");
   const [roll, setRoll] = useState<string>("");
   const [secondRoll, setSecondRoll] = useState<string>("");
@@ -29,7 +31,6 @@ export default function Home() {
   const [isFrontDataValid, setIsFrontDataValid] = useState<boolean>(false);
   const question = "好きな作品やデザインの画像を入れてください。";
   const [hadValidJsonData, setHasValidJsonData] = useState<boolean>(false);
-
   const [judgement, setJudgement] = useState("");
 
   const [pattern, setPattern] = useState<PatternData>({
@@ -53,6 +54,21 @@ export default function Home() {
       name.length > 0 && roll.length > 0 && phone.number.length > 0
     );
   }, [name, roll, phone]);
+
+  useEffect(() => {
+    if (step === 1) {
+      setOmoteScale(1);
+      setUraScale(1 / 3);
+    }
+    if (step === 2) {
+      setOmoteScale(1 / 3);
+      setUraScale(1);
+    }
+    if (step === 3) {
+      setOmoteScale(2 / 3);
+      setUraScale(2 / 3);
+    }
+  }, [step]);
 
   // OpenAI API でデザイン生成
   const handleGeneratePattern = async (e: React.FormEvent) => {
@@ -385,7 +401,9 @@ export default function Home() {
         </div>
         <div className={styles.rightSideContainer}>
           <div className={styles.preview}>
-            <div className={ibmPlexMono.className}>
+            <div
+              className={`${styles.meishiContainer} ${ibmPlexMono.className}`}
+            >
               <p>FRONT</p>
               <MeishiOmoteSketch
                 data={{
@@ -395,12 +413,15 @@ export default function Home() {
                   tel: `${phone.countryCode} ${phone.number}`,
                   email,
                 }}
+                scale={omoteScale}
               />
             </div>
 
-            <div className={ibmPlexMono.className}>
+            <div
+              className={`${styles.meishiContainer} ${ibmPlexMono.className}`}
+            >
               <p>BACK</p>
-              <MeishiUraSketch data={pattern} />
+              <MeishiUraSketch data={pattern} scale={uraScale} />
             </div>
           </div>
         </div>
