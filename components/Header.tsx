@@ -11,7 +11,7 @@ export const Header = ({step}: {step: number}) => {
   return (
     <>
       <div className={`${styles.header} ${interBold.className}`}>
-        <Image src={"/dl_logo.svg"} width={280} height={170} alt="logo" />
+        <Image src={"/dl_logo.svg"} width={280} height={120} alt="logo" />
         <h1>Business Card Creator</h1>
         <p className={`${styles.status} ${ibmPlexMono.className}`}>
           {step < 4 && `${sceneTitleList[step - 1]} - ${step}/3`}

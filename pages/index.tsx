@@ -385,16 +385,23 @@ export default function Home() {
         </div>
         <div className={styles.rightSideContainer}>
           <div className={styles.preview}>
-            <MeishiOmoteSketch
-              data={{
-                name,
-                roll,
-                secondRoll,
-                tel: `${phone.countryCode} ${phone.number}`,
-                email,
-              }}
-            />
-            <MeishiUraSketch data={pattern} />
+            <div className={ibmPlexMono.className}>
+              <p>FRONT</p>
+              <MeishiOmoteSketch
+                data={{
+                  name,
+                  roll,
+                  secondRoll,
+                  tel: `${phone.countryCode} ${phone.number}`,
+                  email,
+                }}
+              />
+            </div>
+
+            <div className={ibmPlexMono.className}>
+              <p>BACK</p>
+              <MeishiUraSketch data={pattern} />
+            </div>
           </div>
         </div>
       </div>

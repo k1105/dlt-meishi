@@ -50,7 +50,7 @@ export default function MeishiUraSketch({data}: {data: PatternData}) {
         };
 
         p.noStroke();
-        p.background(0);
+        p.background(230);
         // Slider の値を表示
         p.textSize(15);
         imageX = displayData.position.x - logoSize.w / 2;
@@ -241,7 +241,7 @@ export default function MeishiUraSketch({data}: {data: PatternData}) {
         p.pop();
 
         // マスク用の長方形
-        p.fill(0);
+        p.fill(230);
         p.noStroke();
         p.rect(meishiSize.w, -p.height, p.width, 2 * p.height);
         p.push();

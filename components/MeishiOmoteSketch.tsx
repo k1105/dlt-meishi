@@ -3,11 +3,12 @@ import {NextReactP5Wrapper} from "@p5-wrapper/next";
 import {useCallback} from "react";
 
 export default function MeishiOmoteSketch({data}: {data: ProfileData}) {
+  const scale = 2;
   // p5.js のスケッチ関数（インスタンスモード）
   const sketch = useCallback(
     (p: P5CanvasInstance) => {
       let displayData = data as ProfileData;
-      const meishiSize = {w: 257.95, h: 155.91};
+      const meishiSize = {w: 257.95 * scale, h: 155.91 * scale};
 
       // Props 更新時にデータを再代入
       p.updateWithProps = (props) => {
@@ -15,8 +16,8 @@ export default function MeishiOmoteSketch({data}: {data: ProfileData}) {
       };
 
       p.setup = function () {
-        p.createCanvas(266.54, 164.46);
-        p.background(0);
+        p.createCanvas(266.54 * scale, 164.46 * scale);
+        p.background(230);
         p.push();
         p.noStroke();
         p.translate(p.width / 2, p.height / 2);
@@ -30,45 +31,45 @@ export default function MeishiOmoteSketch({data}: {data: ProfileData}) {
 
         // メインのテキスト
         p.fill(35, 24, 21);
-        p.textSize(16.03);
+        p.textSize(16.03 * scale);
         p.textFont("Helvetica");
-        p.text(displayData.name, 12.68, 35.65);
+        p.text(displayData.name, 12.68 * scale, 35.65 * scale);
 
         // Email
-        p.textSize(6.5);
-        p.text(displayData.email, 12.58, 128.38);
+        p.textSize(6.5 * scale);
+        p.text(displayData.email, 12.58 * scale, 128.38 * scale);
 
         // Tel
-        p.text(displayData.tel, 12.42, 152.77);
+        p.text(displayData.tel, 12.42 * scale, 152.77 * scale);
 
         // 2段目 (roll, second roll)
         p.fill(148, 148, 149);
-        p.textSize(6);
+        p.textSize(6 * scale);
         p.text(
           `${displayData.roll}${
             displayData.secondRoll && ` / ${displayData.secondRoll}`
           }`,
-          11.98,
-          51.42
+          11.98 * scale,
+          51.42 * scale
         );
-        p.text("DENTSU LAB TOKYO", 12.68, 60.36);
+        p.text("DENTSU LAB TOKYO", 12.68 * scale, 60.36 * scale);
 
         // ラベル
-        p.textSize(4.5);
-        p.text("E-MAIL:", 12.21, 119.45);
-        p.text("PHONE:", 12.21, 143.84);
+        p.textSize(4.5 * scale);
+        p.text("E-MAIL:", 12.21 * scale, 119.45 * scale);
+        p.text("PHONE:", 12.21 * scale, 143.84 * scale);
 
         // ライン
-        p.stroke(191, 192, 192);
-        p.strokeWeight(0.2);
-        p.line(0, 74.06, 257.95, 74.06);
-        p.line(159.45, 74.06, 159.45, 164.46);
+        p.stroke(230);
+        p.strokeWeight(0.5 * scale);
+        p.line(0 * scale, 74.06 * scale, 257.95 * scale, 74.06 * scale);
+        p.line(159.45 * scale, 74.06 * scale, 159.45 * scale, 164.46 * scale);
 
         // 三角形構造
-        p.line(213.5, 0.06, 213.5, 74.06);
-        p.line(213.5, 74.06, 266.46, 74.06);
-        p.line(266.46, 86.59, 207.73, 0.06);
-        p.line(213.5, 74.06, 263.72, 0.06);
+        p.line(213.5 * scale, 0.06 * scale, 213.5 * scale, 74.06 * scale);
+        p.line(213.5 * scale, 74.06 * scale, 266.46 * scale, 74.06 * scale);
+        p.line(266.46 * scale, 86.59 * scale, 207.73 * scale, 0.06 * scale);
+        p.line(213.5 * scale, 74.06 * scale, 266.54 * scale, 0 * scale);
       };
 
       p.draw = function () {
