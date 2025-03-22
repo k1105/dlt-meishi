@@ -79,7 +79,7 @@ export default async function handler(
    - 「チームワークが好きな人」→perspective
    - 「一つの指針を考える人」→isolation  
    - 「きめ細やかな人」→hybrid
-6. **grid.detailedness は 1～10 で設定。**  
+6. **grid.detailedness は 1～5 で設定。**  
    - 繊細な性格→ 8～10  
    - 大胆、ざっくりした性格→ 2〜3 
 7. **極端な性格の場合: sizeをxsかxlにし、positionも端へ寄せる。**

@@ -25,11 +25,11 @@ export default function MeishiUraSketch({
       let displayData = data as PatternData;
       // サイズリスト（ロゴサイズの定義）
       const sizeList: Record<string, number> = {
-        xl: 3.35 * baseScale,
-        l: 2.75 * baseScale,
-        m: 2.14 * baseScale,
-        s: 1.53 * baseScale,
-        xs: 0.92 * baseScale,
+        xl: 2.7775 * baseScale,
+        l: 2.3142 * baseScale,
+        m: 1.8513 * baseScale,
+        s: 1.3883 * baseScale,
+        xs: 0.9258 * baseScale,
       };
 
       const meishiSize = {w: 257.95 * baseScale, h: 155.91 * baseScale};
@@ -66,8 +66,8 @@ export default function MeishiUraSketch({
         p.textSize(15);
         imageX = displayData.position.x * baseScale - logoSize.w / 2;
         imageY = displayData.position.y * baseScale - logoSize.h / 2;
-        imageX = p.max(17.01, p.min(imageX, meishiSize.w - logoSize.w - 17.01));
-        imageY = p.max(17.01, p.min(imageY, meishiSize.h - logoSize.h - 17.01));
+        imageX = p.max(34.02, p.min(imageX, meishiSize.w - logoSize.w - 34.02));
+        imageY = p.max(34.02, p.min(imageY, meishiSize.h - logoSize.h - 34.02));
 
         const rectCorners = {
           lt: {x: imageX, y: imageY},

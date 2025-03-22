@@ -11,28 +11,68 @@ export const drawHybridGrid = (
   },
   detailedness: number
 ) => {
-  p.line(rectCorners.lt.x, 0, rectCorners.lt.x, meishiSize.h);
-  p.line(rectCorners.rt.x, 0, rectCorners.rt.x, meishiSize.h);
-  p.line(0, rectCorners.rt.y, meishiSize.w, rectCorners.rt.y);
-  p.line(0, rectCorners.rb.y, rectCorners.rb.x, rectCorners.rb.y);
+  const minimumGridSize = 18.425;
+  const unitSize = (minimumGridSize * (6 - detailedness)) / 2;
+
+  p.line(
+    Math.ceil(rectCorners.lt.x / unitSize) * unitSize,
+    0,
+    Math.ceil(rectCorners.lt.x / unitSize) * unitSize,
+    meishiSize.h
+  );
+  p.line(
+    Math.ceil(rectCorners.rt.x / unitSize) * unitSize,
+    0,
+    Math.ceil(rectCorners.rt.x / unitSize) * unitSize,
+    meishiSize.h
+  );
+  p.line(
+    0,
+    Math.ceil(rectCorners.rt.y / unitSize) * unitSize,
+    meishiSize.w,
+    Math.ceil(rectCorners.rt.y / unitSize) * unitSize
+  );
+  p.line(
+    0,
+    Math.ceil(rectCorners.rb.y / unitSize) * unitSize,
+    Math.ceil(rectCorners.rb.x / unitSize) * unitSize,
+    Math.ceil(rectCorners.rb.y / unitSize) * unitSize
+  );
   let step = 1;
-  const unitSize = (meishiSize.w - rectCorners.rt.x) / 2 / detailedness;
-  if (unitSize !== 0) {
-    p.translate(rectCorners.rt.x, rectCorners.rt.y);
-    p.push();
-    while (step * unitSize < meishiSize.w - rectCorners.rt.x) {
-      p.translate(unitSize, 0);
-      p.line(0, 0, 0, meishiSize.h - rectCorners.rt.y);
-      step++;
-    }
-    p.pop();
-    p.push();
-    step = 1;
-    while (step * unitSize < meishiSize.h - rectCorners.rt.y) {
-      p.translate(0, unitSize);
-      p.line(0, 0, meishiSize.w - rectCorners.rt.x, 0);
-      step++;
-    }
-    p.pop();
+
+  p.translate(
+    Math.ceil(rectCorners.rt.x / unitSize) * unitSize,
+    Math.ceil(rectCorners.rt.y / unitSize) * unitSize
+  );
+  p.push();
+  while (
+    step * unitSize <
+    meishiSize.w - Math.ceil(rectCorners.rt.x / unitSize) * unitSize
+  ) {
+    p.translate(unitSize, 0);
+    p.line(
+      0,
+      0,
+      0,
+      meishiSize.h - Math.ceil(rectCorners.rt.y / unitSize) * unitSize
+    );
+    step++;
   }
+  p.pop();
+  p.push();
+  step = 1;
+  while (
+    step * unitSize <
+    meishiSize.h - Math.ceil(rectCorners.rt.y / unitSize) * unitSize
+  ) {
+    p.translate(0, unitSize);
+    p.line(
+      0,
+      0,
+      meishiSize.w - Math.ceil(rectCorners.rt.x / unitSize) * unitSize,
+      0
+    );
+    step++;
+  }
+  p.pop();
 };

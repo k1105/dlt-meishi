@@ -38,10 +38,10 @@ export default function Home() {
       x: 100,
       y: 100,
     },
-    size: "m",
+    size: "xl",
     grid: {
-      type: "perspective",
-      detailedness: 3,
+      type: "hybrid",
+      detailedness: 5,
     },
   });
   const [preview, setPreview] = useState<string | null>(null);
