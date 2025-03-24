@@ -12,6 +12,7 @@ interface PatternData {
 
 interface ProfileData {
   name: string;
+  nameJa: string;
   roll: string;
   secondRoll: string;
   tel: string;

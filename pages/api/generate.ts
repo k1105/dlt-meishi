@@ -80,8 +80,8 @@ export default async function handler(
    - 「一つの指針を考える人」→isolation  
    - 「きめ細やかな人」→hybrid
 6. **grid.detailedness は 1～5 で設定。**  
-   - 繊細な性格→ 8～10  
-   - 大胆、ざっくりした性格→ 2〜3 
+   - 繊細な性格→ 4~5  
+   - 大胆、ざっくりした性格→ 1~2
 7. **極端な性格の場合: sizeをxsかxlにし、positionも端へ寄せる。**
 
 #### **出力フォーマット**
@@ -92,7 +92,7 @@ export default async function handler(
 {
   "position": { "x": (数値0~455), "y": (数値0~275) },
   "size": "xs | s | m | l | xl",
-  "grid": { "type": "(isolation | perspective | hybrid)", "detailedness": (1~10) }
+  "grid": { "type": "(isolation | perspective | hybrid)", "detailedness": (1~5) }
 }
 `;
 

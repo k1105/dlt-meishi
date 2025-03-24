@@ -1,7 +1,7 @@
 import type {P5CanvasInstance} from "@p5-wrapper/react";
 import {NextReactP5Wrapper} from "@p5-wrapper/next";
 import {useCallback} from "react";
-// import p5Types from "p5";
+// import P5Types from "p5";
 
 export default function MeishiOmoteSketch({
   data,
@@ -10,113 +10,136 @@ export default function MeishiOmoteSketch({
   data: ProfileData;
   scale: number;
 }) {
+  // ベースの拡大率
   const baseScale = 2;
 
   const sketch = useCallback(
     (p: P5CanvasInstance) => {
+      // props更新があった場合のために変数を用意
       let displayData = data as ProfileData;
-      const meishiSize = {w: 257.95 * baseScale, h: 155.91 * baseScale};
-      // let font: p5Types.Font;
 
-      // Props 更新時にデータを再代入
+      // 名刺サイズ (SVGオリジナルの 257.95 x 155.91) に baseScale を掛けたもの
+      const cardW = 257.95 * baseScale;
+      const cardH = 155.91 * baseScale;
+      // let font: P5Types.Font;
+
+      // 描画するデータが更新されたら再格納
       p.updateWithProps = (props) => {
         displayData = props.data as ProfileData;
       };
 
       p.preload = () => {
+        // 必要であればここでフォント読み込み (p.loadFont など)
         // font = p.loadFont("/fonts/IBMPlexMono-Regular.ttf");
       };
 
       p.setup = function () {
-        p.createCanvas(266.54 * baseScale, 164.46 * baseScale);
-        p.background(230);
-        p.push();
-        p.noStroke();
-        p.translate(p.width / 2, p.height / 2);
-        p.rect(
-          -meishiSize.w / 2,
-          -meishiSize.h / 2,
-          meishiSize.w,
-          meishiSize.h
-        );
-        p.pop();
+        // キャンバスを名刺サイズ + baseScaleで作成
+        p.createCanvas(cardW, cardH);
 
-        // メインのテキスト
-        p.fill(35, 24, 21);
-        p.textSize(16.03 * baseScale);
-        // p.textFont(font);
-        p.text(displayData.name, 12.68 * baseScale, 35.65 * baseScale);
-
-        // Email
-        p.textSize(6.5 * baseScale);
-        p.text(displayData.email, 12.58 * baseScale, 128.38 * baseScale);
-
-        // Tel
-        p.text(displayData.tel, 12.42 * baseScale, 152.77 * baseScale);
-
-        // 2段目 (roll, second roll)
-        p.fill(148, 148, 149);
-        p.textSize(6 * baseScale);
-        p.text(
-          `${displayData.roll}${
-            displayData.secondRoll && ` / ${displayData.secondRoll}`
-          }`,
-          11.98 * baseScale,
-          51.42 * baseScale
-        );
-        p.text("DENTSU LAB TOKYO", 12.68 * baseScale, 60.36 * baseScale);
-
-        // ラベル
-        p.textSize(4.5 * baseScale);
-        p.text("E-MAIL:", 12.21 * baseScale, 119.45 * baseScale);
-        p.text("PHONE:", 12.21 * baseScale, 143.84 * baseScale);
-
-        // ライン
-        p.stroke(230);
-        p.strokeWeight(0.5 * baseScale);
-        p.line(
-          0 * baseScale,
-          74.06 * baseScale,
-          257.95 * baseScale,
-          74.06 * baseScale
-        );
-        p.line(
-          159.45 * baseScale,
-          74.06 * baseScale,
-          159.45 * baseScale,
-          164.46 * baseScale
-        );
-
-        // 三角形構造
-        p.line(
-          213.5 * baseScale,
-          0.06 * baseScale,
-          213.5 * baseScale,
-          74.06 * baseScale
-        );
-        p.line(
-          213.5 * baseScale,
-          74.06 * baseScale,
-          266.46 * baseScale,
-          74.06 * baseScale
-        );
-        p.line(
-          266.46 * baseScale,
-          86.59 * baseScale,
-          207.73 * baseScale,
-          0.06 * baseScale
-        );
-        p.line(
-          213.5 * baseScale,
-          74.06 * baseScale,
-          266.54 * baseScale,
-          0 * baseScale
-        );
+        // 1フレームだけ描画
+        p.noLoop();
       };
 
       p.draw = function () {
-        // 一度だけ描画
-        p.noLoop();
+        // 背景を白に
+        p.background(255);
+        // ---------------- 罫線の設定 ----------------
+        p.stroke(191, 192, 192); // #bfc0c0
+        p.strokeWeight(0.2 * baseScale);
+        p.noFill();
+
+        // ================== 罫線を描画 ==================
+        // 1) 横線 (y=91.17 → 91.17 * baseScale)
+        p.line(
+          0,
+          91.17 * baseScale,
+          258 * baseScale, // 元のSVGは 258 近辺 (257.95 でもOK)
+          91.17 * baseScale
+        );
+        // 2) 縦線 (x=160.34)
+        p.line(
+          160.34 * baseScale,
+          91.17 * baseScale,
+          160.34 * baseScale,
+          156 * baseScale // 155.91 でもOK
+        );
+
+        // 3) 右上の三角形＋×ライン (strokeWeightだけ 0.21にする)
+        p.strokeWeight(0.21 * baseScale);
+
+        p.line(
+          205.69 * baseScale,
+          91.12 * baseScale,
+          205.69 * baseScale,
+          0.11 * baseScale
+        );
+        p.line(
+          205.69 * baseScale,
+          0.11 * baseScale,
+          257.85 * baseScale,
+          0.11 * baseScale
+        );
+        p.line(
+          205.69 * baseScale,
+          91.12 * baseScale,
+          257.85 * baseScale,
+          0.11 * baseScale
+        );
+        p.line(
+          205.69 * baseScale,
+          0.11 * baseScale,
+          257.85 * baseScale,
+          91.12 * baseScale
+        );
+
+        // ================== テキスト描画 ==================
+        // 日本語 + 英語 (同じベースラインで、9.5px分スペースを空ける)
+        let baseX = 24.05 * baseScale;
+        const baseY = 47.3 * baseScale;
+
+        // (1) 日本語氏名
+        p.fill(26, 11, 8); // #1a0b08
+        p.textSize(9.5 * baseScale);
+        p.text(displayData.nameJa, baseX, baseY);
+
+        // 日本語氏名の描画幅を取得
+        const nameJaWidth = p.textWidth(displayData.nameJa);
+
+        // (2) 英語氏名 (日本語 + 9.5ピクセルのスペース)
+        baseX += nameJaWidth + 9.5 * baseScale;
+        p.fill(35, 24, 21); // #231815
+        p.textSize(10 * baseScale);
+        p.text(displayData.name, baseX, baseY);
+
+        // (3) 役職 Business Title
+        p.fill(149, 148, 149); // #949495
+        p.textSize(6 * baseScale);
+        p.push();
+        // p.textFont(font);
+        // メインとセカンダリがあれば "メイン / セカンダリ"
+        const businessTitle = displayData.secondRoll
+          ? `${displayData.roll} / ${displayData.secondRoll}`
+          : displayData.roll;
+        p.text(businessTitle, 23.56 * baseScale, 59.76 * baseScale);
+        p.pop();
+        // (4) E-MAIL ラベル + テキスト
+        p.fill(149, 148, 149);
+        p.textSize(4.5 * baseScale);
+        p.text("E-MAIL:", 23.55 * baseScale, 108.53 * baseScale);
+
+        p.fill(26, 11, 8);
+        p.textSize(6.5 * baseScale);
+        p.text(displayData.email, 23.92 * baseScale, 117.46 * baseScale);
+
+        // (5) PHONE ラベル + テキスト
+        p.fill(149, 148, 149);
+        p.textSize(4.5 * baseScale);
+        p.text("PHONE:", 23.55 * baseScale, 130.08 * baseScale);
+
+        p.fill(26, 11, 8);
+        p.textSize(6.5 * baseScale);
+        p.text(displayData.tel, 23.76 * baseScale, 139.01 * baseScale);
       };
     },
     [data]
@@ -125,14 +148,15 @@ export default function MeishiOmoteSketch({
   return (
     <div
       style={{
+        // scaleによるプレビュー拡大・縮小 (transform-origin: "top left" はお好みで)
         transformOrigin: "top left",
-        width: `${266.54 * baseScale * scale}px`,
-        height: `${164.46 * baseScale * scale}px`,
+        width: `${257.95 * baseScale * scale}px`,
+        height: `${155.91 * baseScale * scale}px`,
         transform: `scale(${scale})`,
         transition: "all 1s ease",
       }}
     >
-      {/* NextReactP5Wrapper は SSR 無効化のために dynamic import 推奨 */}
+      {/* NextReactP5Wrapper は SSRでバンドルエラーを起こさないように dynamic import 推奨 */}
       <NextReactP5Wrapper sketch={sketch} data={data} />
     </div>
   );

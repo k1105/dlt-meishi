@@ -18,6 +18,7 @@ export default function Home() {
   const [omoteScale, setOmoteScale] = useState<number>(1);
   const [uraScale, setUraScale] = useState<number>(1 / 3);
   const [name, setName] = useState<string>("");
+  const [nameJa, setNameJa] = useState<string>("");
   const [roll, setRoll] = useState<string>("");
   const [secondRoll, setSecondRoll] = useState<string>("");
   const [phone, setPhone] = useState<{
@@ -156,8 +157,23 @@ export default function Home() {
               <div className={styles.inputFormWrapper}>
                 <label>
                   <p className={styles.label}>
-                    <span className={ibmPlexMono.className}>Name</span>{" "}
-                    <small>名前</small>
+                    <span className={ibmPlexMono.className}>Name (Kanji)</span>
+                    <small>名前 (漢字表記)</small>
+                  </p>
+                  <input
+                    type="text"
+                    value={nameJa}
+                    onChange={(e) => setNameJa(e.target.value)}
+                    className={styles.inputForm}
+                    required
+                  />
+                </label>
+                <label>
+                  <p className={styles.label}>
+                    <span className={ibmPlexMono.className}>
+                      Name (Alphabet)
+                    </span>{" "}
+                    <small>名前 (アルファベット表記)</small>
                   </p>
                   <input
                     type="text"
@@ -310,8 +326,15 @@ export default function Home() {
             <div className={styles.confirmTextWrapper}>
               <div>
                 <p className={styles.label}>
-                  <span className={ibmPlexMono.className}>Name</span>{" "}
-                  <small>名前</small>
+                  <span className={ibmPlexMono.className}>Name (Kanji)</span>{" "}
+                  <small>名前 (漢字表記)</small>
+                </p>
+                <p className={styles.confirmText}>{name}</p>
+              </div>
+              <div>
+                <p className={styles.label}>
+                  <span className={ibmPlexMono.className}>Name (Alphabet)</span>{" "}
+                  <small>名前 (アルファベット表記)</small>
                 </p>
                 <p className={styles.confirmText}>{name}</p>
               </div>
@@ -413,6 +436,7 @@ export default function Home() {
               <MeishiOmoteSketch
                 data={{
                   name,
+                  nameJa,
                   roll,
                   secondRoll,
                   tel: `${phone.countryCode} ${phone.number}`,
