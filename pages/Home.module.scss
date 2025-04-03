@@ -123,16 +123,20 @@
   }
 }
 
+.retryButton,
 .fileSelectButton {
   cursor: pointer;
   position: fixed;
   left: 3rem;
   top: 65vh;
-  background-color: black;
-  color: white;
   height: 4rem;
   font-weight: bold;
   line-height: 4rem;
+}
+
+.fileSelectButton {
+  background-color: black;
+  color: white;
   padding: 0 1.5rem;
 }
 

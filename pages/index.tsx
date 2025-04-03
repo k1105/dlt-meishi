@@ -18,7 +18,11 @@ export default function Home() {
   const [omoteScale, setOmoteScale] = useState<number>(1);
   const [uraScale, setUraScale] = useState<number>(1 / 3);
   const [name, setName] = useState<string>("");
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
   const [nameJa, setNameJa] = useState<string>("");
+  const [sei, setSei] = useState<string>("");
+  const [mei, setMei] = useState<string>("");
   const [roll, setRoll] = useState<string>("");
   const [secondRoll, setSecondRoll] = useState<string>("");
   const [phone, setPhone] = useState<{
@@ -31,7 +35,7 @@ export default function Home() {
   const [email, setEmail] = useState<string>("");
   const [isFrontDataValid, setIsFrontDataValid] = useState<boolean>(false);
   const question = "好きな作品やデザインの画像を入れてください。";
-  const [hadValidJsonData, setHasValidJsonData] = useState<boolean>(false);
+  const [hasValidJsonData, setHasValidJsonData] = useState<boolean>(false);
   const [judgement, setJudgement] = useState("");
 
   const [pattern, setPattern] = useState<PatternData>({
@@ -70,6 +74,14 @@ export default function Home() {
       setUraScale(2 / 3);
     }
   }, [step]);
+
+  useEffect(() => {
+    setNameJa(`${sei} ${mei}`);
+  }, [sei, mei]);
+
+  useEffect(() => {
+    setName(`${lastName} ${firstName}`);
+  }, [firstName, lastName]);
 
   // OpenAI API でデザイン生成
   const handleGeneratePattern = async (e: React.FormEvent) => {
@@ -160,13 +172,32 @@ export default function Home() {
                     <span className={ibmPlexMono.className}>Name (Kanji)</span>
                     <small>名前 (漢字表記)</small>
                   </p>
-                  <input
-                    type="text"
-                    value={nameJa}
-                    onChange={(e) => setNameJa(e.target.value)}
-                    className={styles.inputForm}
-                    required
-                  />
+                  <div
+                    style={{
+                      width: "33rem",
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <input
+                      style={{width: "47%"}}
+                      type="text"
+                      value={sei}
+                      onChange={(e) => setSei(e.target.value)}
+                      className={styles.inputForm}
+                      required
+                      placeholder="姓"
+                    />
+                    <input
+                      style={{width: "47%"}}
+                      type="text"
+                      value={mei}
+                      onChange={(e) => setMei(e.target.value)}
+                      className={styles.inputForm}
+                      required
+                      placeholder="名"
+                    />
+                  </div>
                 </label>
                 <label>
                   <p className={styles.label}>
@@ -175,19 +206,42 @@ export default function Home() {
                     </span>{" "}
                     <small>名前 (アルファベット表記)</small>
                   </p>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value.toUpperCase())}
-                    className={styles.inputForm}
-                    required
-                  />
+                  <div
+                    style={{
+                      width: "33rem",
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <input
+                      style={{width: "47%"}}
+                      type="text"
+                      value={lastName}
+                      onChange={(e) =>
+                        setLastName(e.target.value.toUpperCase())
+                      }
+                      className={styles.inputForm}
+                      required
+                      placeholder="LAST NAME"
+                    />
+                    <input
+                      style={{width: "47%"}}
+                      type="text"
+                      value={firstName}
+                      onChange={(e) =>
+                        setFirstName(e.target.value.toUpperCase())
+                      }
+                      className={styles.inputForm}
+                      required
+                      placeholder="FIRST NAME"
+                    />
+                  </div>
                 </label>
 
                 <label>
                   <p className={styles.label}>
                     <span className={ibmPlexMono.className}>
-                      Business Title(Primary)
+                      BUSINESS TITLE(Primary)
                     </span>{" "}
                     <small>第１ビジネスタイトル</small>
                   </p>
@@ -203,7 +257,7 @@ export default function Home() {
                 <label>
                   <p className={styles.label}>
                     <span className={ibmPlexMono.className}>
-                      Business Title(Secondary)
+                      BUSINESS TITLE(Secondary)
                     </span>
                     <small>第２ビジネスタイトル</small>
                   </p>
@@ -275,14 +329,26 @@ export default function Home() {
                   display: "none", // 完全に非表示
                 }}
               />
-
-              {/* ファイルを選択するためのカスタムボタン */}
-              <label
-                htmlFor="hiddenFileInput"
-                className={styles.fileSelectButton}
-              >
-                ファイルを選択
-              </label>
+              {!hasValidJsonData ? (
+                <>
+                  <label
+                    htmlFor="hiddenFileInput"
+                    className={styles.fileSelectButton}
+                  >
+                    ファイルを選択
+                  </label>
+                </>
+              ) : (
+                <div
+                  className={styles.retryButton}
+                  onClick={() => {
+                    setHasValidJsonData(false);
+                    setPreview(null);
+                  }}
+                >
+                  <p>もう一度やる</p>
+                </div>
+              )}
 
               {/**
                * もし「ファイル名を表示」したくなったらここで `file?.name` を表示する。
@@ -301,7 +367,7 @@ export default function Home() {
                 )}
               </div>
 
-              {hadValidJsonData ? (
+              {hasValidJsonData ? (
                 <button
                   className={styles.nextButton}
                   onClick={() => setStep(3)}
@@ -329,7 +395,7 @@ export default function Home() {
                   <span className={ibmPlexMono.className}>Name (Kanji)</span>{" "}
                   <small>名前 (漢字表記)</small>
                 </p>
-                <p className={styles.confirmText}>{name}</p>
+                <p className={styles.confirmText}>{nameJa}</p>
               </div>
               <div>
                 <p className={styles.label}>
@@ -342,7 +408,7 @@ export default function Home() {
               <div>
                 <p className={styles.label}>
                   <span className={ibmPlexMono.className}>
-                    Business Title(Primary)
+                    BUSINESS TITLE(Primary)
                   </span>{" "}
                   <small>第１ビジネスタイトル</small>
                 </p>
@@ -351,7 +417,7 @@ export default function Home() {
               <div>
                 <p className={styles.label}>
                   <span className={ibmPlexMono.className}>
-                    Business Title(Secondary)
+                    BUSINESS TITLE(Secondary)
                   </span>{" "}
                   <small>第２ビジネスタイトル</small>
                 </p>
@@ -393,24 +459,19 @@ export default function Home() {
                 <div className={styles.completionMessageContainer}>
                   <div className={styles.headlineContainer}>
                     <h2 className={styles.headlineEn}>
-                      Business cards have been ordered.
+                      Your Business card has been successfully ordered.
                     </h2>
                     <h3 className={styles.headlineJa}>
-                      名刺の発注が完了しました
+                      名刺の発注が完了しました。
                     </h3>
                   </div>
                   <div className={styles.noteContainer}>
                     <p className={styles.noteEn}>
-                      Delivery date will be communicated as soon as possible.
-                      <br />
-                      Business cards must be picked up in person.
-                      <br /> Business card pickup location: xxx (00:00-00:00)
+                      You will receive information on how to receive your
+                      business card, along with an estimated delivery date.
                     </p>
-                    <p className={styles.noteEn}>
-                      納品日は追ってご連絡します。
-                      <br />
-                      名刺はご自身で受け取りが必要です。
-                      <br /> 名刺の受け取り場所：xxx (00:00 - 00:00)
+                    <p className={styles.noteJa}>
+                      名刺の受け取り方法は納品予定日とともに別途ご連絡します。
                     </p>
                   </div>
                 </div>

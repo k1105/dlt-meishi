@@ -72,8 +72,8 @@ export default async function handler(
    - 繊細な印象を受ける→\ xs\ or \ s\    
    - 非常にポジティブな印象、ボールドな印象→\ l\ or \ xl\  
    - 回答者からは上記のような印象を受けない→\ m\
-4. **position.x は 0～256, position.y は 0～156。**
-   - 明快でボールドな印象、正統派の印象の場合は中央付近に配置する: x=128, y=78.
+4. **position.x は 0～100, position.y は 0～100。**
+   - 明快でボールドな印象、正統派の印象の場合は中央付近に配置する: x=50, y=50.
    - ポジティブな印象の場合は右上、ネガティブな印象の場合は左下に配置する。
 5. **grid.type は isolation, perspective, hybrid の３種類のみ。**  
    - 「チームワークが好きな人」→perspective
@@ -105,6 +105,7 @@ export default async function handler(
 
     const resultText = finalResponse.choices[0].message?.content?.trim() || "";
     const [judgment, jsonMatch] = resultText.split("```json");
+    console.log("Image Description:", imageDescription);
     console.log("Judgment:", judgment);
     console.log("result", resultText);
     console.log("JSON Match:", jsonMatch);

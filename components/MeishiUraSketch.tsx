@@ -64,8 +64,12 @@ export default function MeishiUraSketch({
         p.background(230);
         // Slider の値を表示
         p.textSize(15);
-        imageX = displayData.position.x * baseScale - logoSize.w / 2;
-        imageY = displayData.position.y * baseScale - logoSize.h / 2;
+        imageX =
+          ((displayData.position.x * 257.95) / 100) * baseScale -
+          logoSize.w / 2;
+        imageY =
+          ((displayData.position.y * 155.91) / 100) * baseScale -
+          logoSize.h / 2;
         imageX = p.max(34.02, p.min(imageX, meishiSize.w - logoSize.w - 34.02));
         imageY = p.max(34.02, p.min(imageY, meishiSize.h - logoSize.h - 34.02));
 
