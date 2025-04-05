@@ -37,16 +37,18 @@ export default function Home() {
   const question = "好きな作品やデザインの画像を入れてください。";
   const [hasValidJsonData, setHasValidJsonData] = useState<boolean>(false);
   const [judgement, setJudgement] = useState("");
+  const [isPreviewMode, setIsPreviewMode] = useState<boolean>(false);
+  const [innerWidth, setInnerWidth] = useState<number>(0);
 
   const [pattern, setPattern] = useState<PatternData>({
     position: {
-      x: 100,
-      y: 100,
+      x: 50,
+      y: 50,
     },
-    size: "xl",
+    size: "m",
     grid: {
       type: "hybrid",
-      detailedness: 5,
+      detailedness: 3,
     },
   });
   const [preview, setPreview] = useState<string | null>(null);
@@ -55,25 +57,34 @@ export default function Home() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
+    if (window) setInnerWidth(window.innerWidth);
+  }, []);
+
+  useEffect(() => {
     setIsFrontDataValid(
       name.length > 0 && roll.length > 0 && phone.number.length > 0
     );
   }, [name, roll, phone]);
 
   useEffect(() => {
-    if (step === 1) {
-      setOmoteScale(1);
-      setUraScale(1 / 3);
-    }
-    if (step === 2) {
-      setOmoteScale(1 / 3);
-      setUraScale(1);
-    }
-    if (step === 3) {
+    if (innerWidth < 600) {
       setOmoteScale(2 / 3);
       setUraScale(2 / 3);
+    } else {
+      if (step === 1) {
+        setOmoteScale(1);
+        setUraScale(1 / 3);
+      }
+      if (step === 2) {
+        setOmoteScale(1 / 3);
+        setUraScale(1);
+      }
+      if (step === 3) {
+        setOmoteScale(2 / 3);
+        setUraScale(2 / 3);
+      }
     }
-  }, [step]);
+  }, [step, innerWidth]);
 
   useEffect(() => {
     setNameJa(`${sei} ${mei}`);
@@ -155,366 +166,377 @@ export default function Home() {
   };
 
   return (
-    <Layout step={step}>
+    <Layout
+      step={step}
+      isPreviewMode={isPreviewMode}
+      setIsPreviewMode={setIsPreviewMode}
+    >
       <div className={`${styles.main} ${inter.className}`}>
-        <div className={styles.leftSideContainer}>
-          {step === 1 && (
-            <form
-              className={styles.formContainer}
-              onSubmit={(e) => {
-                e.preventDefault();
-                setStep(2);
-              }}
-            >
-              <div className={styles.inputFormWrapper}>
-                <label>
-                  <p className={styles.label}>
-                    <span className={ibmPlexMono.className}>Name (Kanji)</span>
-                    <small>名前 (漢字表記)</small>
-                  </p>
+        {(innerWidth > 600 || !isPreviewMode) && (
+          <div className={styles.leftSideContainer}>
+            {step === 1 && (
+              <form
+                className={styles.formContainer}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  setStep(2);
+                }}
+              >
+                <div className={styles.inputFormWrapper}>
+                  <label>
+                    <p className={styles.label}>
+                      <span className={ibmPlexMono.className}>
+                        Name (Kanji)
+                      </span>
+                      <small>名前 (漢字表記)</small>
+                    </p>
+                    <div className={styles.inputPairContainer}>
+                      <input
+                        className={`${styles.inputPair} ${styles.inputForm}`}
+                        type="text"
+                        value={sei}
+                        onChange={(e) => setSei(e.target.value)}
+                        required
+                        placeholder="姓"
+                      />
+                      <input
+                        className={`${styles.inputPair} ${styles.inputForm}`}
+                        type="text"
+                        value={mei}
+                        onChange={(e) => setMei(e.target.value)}
+                        required
+                        placeholder="名"
+                      />
+                    </div>
+                  </label>
+                  <label>
+                    <p className={styles.label}>
+                      <span className={ibmPlexMono.className}>
+                        Name (Alphabet)
+                      </span>{" "}
+                      <small>名前 (アルファベット表記)</small>
+                    </p>
+                    <div className={styles.inputPairContainer}>
+                      <input
+                        className={`${styles.inputPair} ${styles.inputForm}`}
+                        type="text"
+                        value={lastName}
+                        onChange={(e) =>
+                          setLastName(e.target.value.toUpperCase())
+                        }
+                        required
+                        placeholder="LAST NAME"
+                      />
+                      <input
+                        className={`${styles.inputPair} ${styles.inputForm}`}
+                        type="text"
+                        value={firstName}
+                        onChange={(e) =>
+                          setFirstName(e.target.value.toUpperCase())
+                        }
+                        required
+                        placeholder="FIRST NAME"
+                      />
+                    </div>
+                  </label>
+
+                  <label>
+                    <p className={styles.label}>
+                      <span className={ibmPlexMono.className}>
+                        BUSINESS TITLE(Primary)
+                      </span>{" "}
+                      <small>第１ビジネスタイトル</small>
+                    </p>
+                    <input
+                      type="text"
+                      value={roll}
+                      onChange={(e) => setRoll(e.target.value.toUpperCase())}
+                      className={styles.inputForm}
+                      required
+                    />
+                  </label>
+
+                  <label>
+                    <p className={styles.label}>
+                      <span className={ibmPlexMono.className}>
+                        BUSINESS TITLE(Secondary)
+                      </span>
+                      <small>第２ビジネスタイトル</small>
+                    </p>
+                    <input
+                      type="text"
+                      value={secondRoll}
+                      onChange={(e) =>
+                        setSecondRoll(e.target.value.toUpperCase())
+                      }
+                      className={styles.inputForm}
+                    />
+                  </label>
+
+                  <label>
+                    <p className={styles.label}>
+                      <span className={ibmPlexMono.className}>Mail</span>{" "}
+                      <small>メールアドレス</small>
+                    </p>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className={styles.inputForm}
+                      required
+                    />
+                  </label>
+
+                  {/* 電話番号入力コンポーネント */}
+                  <PhoneInput phone={phone} setPhone={setPhone} />
+                </div>
+
+                <button
+                  className={`${styles.nextButton} ${
+                    !isFrontDataValid && styles.disabled
+                  }`}
+                  type="submit"
+                >
+                  次へ
+                </button>
+              </form>
+            )}
+
+            {step === 2 && (
+              <div>
+                <div className={styles.verticalGridLayer} />
+                <div className={styles.holizonalGridLayer} />
+                {judgement ? (
+                  <div className={styles.judgement}>
+                    <h3>あなたについて</h3>
+                    <p>{judgement}</p>
+                  </div>
+                ) : (
+                  <div>
+                    <p className={styles.questionText}>{question}</p>
+                    <p>
+                      写真から抽出された特徴をもとに、裏面のデザインを生成します。
+                    </p>
+                  </div>
+                )}
+                {/* 見えないinput */}
+                <input
+                  id="hiddenFileInput"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    handleImageChange(e, setPreview);
+                  }}
+                  style={{
+                    display: "none", // 完全に非表示
+                  }}
+                />
+                {!hasValidJsonData ? (
+                  <>
+                    <label
+                      htmlFor="hiddenFileInput"
+                      className={styles.fileSelectButton}
+                    >
+                      ファイルを選択
+                    </label>
+                  </>
+                ) : (
                   <div
-                    style={{
-                      width: "33rem",
-                      display: "flex",
-                      justifyContent: "space-between",
+                    className={styles.retryButton}
+                    onClick={() => {
+                      setHasValidJsonData(false);
+                      setPreview(null);
                     }}
                   >
-                    <input
-                      style={{width: "47%"}}
-                      type="text"
-                      value={sei}
-                      onChange={(e) => setSei(e.target.value)}
-                      className={styles.inputForm}
-                      required
-                      placeholder="姓"
-                    />
-                    <input
-                      style={{width: "47%"}}
-                      type="text"
-                      value={mei}
-                      onChange={(e) => setMei(e.target.value)}
-                      className={styles.inputForm}
-                      required
-                      placeholder="名"
-                    />
+                    <p>リトライ</p>
                   </div>
-                </label>
-                <label>
+                )}
+
+                {/**
+                 * もし「ファイル名を表示」したくなったらここで `file?.name` を表示する。
+                 * 現在は「ファイル名不要」とのことなので表示しない。
+                 */}
+                {/* {file && <p>{file.name}</p>} */}
+
+                <div className={styles.imageWrapper}>
+                  {preview && (
+                    <Image
+                      src={preview}
+                      alt="プレビュー"
+                      fill
+                      style={{objectFit: "contain"}}
+                    />
+                  )}
+                </div>
+
+                {hasValidJsonData ? (
+                  <button
+                    className={styles.nextButton}
+                    onClick={() => setStep(3)}
+                  >
+                    次へ
+                  </button>
+                ) : (
+                  <button
+                    className={`${styles.nextButton} ${
+                      (loading || !preview) && styles.disabled
+                    }`}
+                    onClick={handleGeneratePattern}
+                    disabled={loading || !preview}
+                  >
+                    {loading ? "生成中..." : "デザインを生成"}
+                  </button>
+                )}
+              </div>
+            )}
+
+            {step === 3 && pattern && (
+              <div className={styles.confirmTextWrapper}>
+                <div>
+                  <p className={styles.label}>
+                    <span className={ibmPlexMono.className}>Name (Kanji)</span>{" "}
+                    <small>名前 (漢字表記)</small>
+                  </p>
+                  <p className={styles.confirmText}>{nameJa}</p>
+                </div>
+                <div>
                   <p className={styles.label}>
                     <span className={ibmPlexMono.className}>
                       Name (Alphabet)
                     </span>{" "}
                     <small>名前 (アルファベット表記)</small>
                   </p>
-                  <div
-                    style={{
-                      width: "33rem",
-                      display: "flex",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <input
-                      style={{width: "47%"}}
-                      type="text"
-                      value={lastName}
-                      onChange={(e) =>
-                        setLastName(e.target.value.toUpperCase())
-                      }
-                      className={styles.inputForm}
-                      required
-                      placeholder="LAST NAME"
-                    />
-                    <input
-                      style={{width: "47%"}}
-                      type="text"
-                      value={firstName}
-                      onChange={(e) =>
-                        setFirstName(e.target.value.toUpperCase())
-                      }
-                      className={styles.inputForm}
-                      required
-                      placeholder="FIRST NAME"
-                    />
-                  </div>
-                </label>
+                  <p className={styles.confirmText}>{name}</p>
+                </div>
 
-                <label>
+                <div>
                   <p className={styles.label}>
                     <span className={ibmPlexMono.className}>
                       BUSINESS TITLE(Primary)
                     </span>{" "}
                     <small>第１ビジネスタイトル</small>
                   </p>
-                  <input
-                    type="text"
-                    value={roll}
-                    onChange={(e) => setRoll(e.target.value.toUpperCase())}
-                    className={styles.inputForm}
-                    required
-                  />
-                </label>
-
-                <label>
+                  <p className={styles.confirmText}>{roll}</p>
+                </div>
+                <div>
                   <p className={styles.label}>
                     <span className={ibmPlexMono.className}>
                       BUSINESS TITLE(Secondary)
-                    </span>
+                    </span>{" "}
                     <small>第２ビジネスタイトル</small>
                   </p>
-                  <input
-                    type="text"
-                    value={secondRoll}
-                    onChange={(e) =>
-                      setSecondRoll(e.target.value.toUpperCase())
-                    }
-                    className={styles.inputForm}
-                  />
-                </label>
-
-                <label>
+                  <p className={styles.confirmText}>{secondRoll}</p>
+                </div>
+                <div>
                   <p className={styles.label}>
                     <span className={ibmPlexMono.className}>Mail</span>{" "}
                     <small>メールアドレス</small>
                   </p>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className={styles.inputForm}
-                    required
-                  />
-                </label>
-
-                {/* 電話番号入力コンポーネント */}
-                <PhoneInput phone={phone} setPhone={setPhone} />
-              </div>
-
-              <button
-                className={`${styles.nextButton} ${
-                  !isFrontDataValid && styles.disabled
-                }`}
-                type="submit"
-              >
-                次へ
-              </button>
-            </form>
-          )}
-
-          {step === 2 && (
-            <div>
-              <div className={styles.verticalGridLayer} />
-              <div className={styles.holizonalGridLayer} />
-              {judgement ? (
-                <div className={styles.judgement}>
-                  <h3>あなたについて</h3>
-                  <p>{judgement}</p>
+                  <p className={styles.confirmText}>{email}</p>
                 </div>
-              ) : (
                 <div>
-                  <p className={styles.questionText}>{question}</p>
-                  <p>
-                    写真から抽出された特徴をもとに、裏面のデザインを生成します。
+                  <p className={styles.label}>
+                    <span className={ibmPlexMono.className}>Tel</span>{" "}
+                    <small>電話番号</small>
                   </p>
+                  <p
+                    className={styles.confirmText}
+                  >{`${phone.countryCode} ${phone.number}`}</p>
                 </div>
-              )}
-              {/* 見えないinput */}
-              <input
-                id="hiddenFileInput"
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  handleImageChange(e, setPreview);
-                }}
-                style={{
-                  display: "none", // 完全に非表示
-                }}
-              />
-              {!hasValidJsonData ? (
-                <>
-                  <label
-                    htmlFor="hiddenFileInput"
-                    className={styles.fileSelectButton}
-                  >
-                    ファイルを選択
-                  </label>
-                </>
-              ) : (
-                <div
-                  className={styles.retryButton}
-                  onClick={() => {
-                    setHasValidJsonData(false);
-                    setPreview(null);
-                  }}
-                >
-                  <p>もう一度やる</p>
-                </div>
-              )}
-
-              {/**
-               * もし「ファイル名を表示」したくなったらここで `file?.name` を表示する。
-               * 現在は「ファイル名不要」とのことなので表示しない。
-               */}
-              {/* {file && <p>{file.name}</p>} */}
-
-              <div className={styles.imageWrapper}>
-                {preview && (
-                  <Image
-                    src={preview}
-                    alt="プレビュー"
-                    fill
-                    style={{objectFit: "contain"}}
-                  />
-                )}
-              </div>
-
-              {hasValidJsonData ? (
                 <button
                   className={styles.nextButton}
-                  onClick={() => setStep(3)}
+                  onClick={() => {
+                    handleUpload();
+                    setStep(4);
+                  }}
                 >
-                  次へ
+                  確定して入稿
                 </button>
-              ) : (
-                <button
-                  className={`${styles.nextButton} ${
-                    (loading || !preview) && styles.disabled
-                  }`}
-                  onClick={handleGeneratePattern}
-                  disabled={loading || !preview}
-                >
-                  {loading ? "生成中..." : "デザインを生成"}
-                </button>
-              )}
-            </div>
-          )}
+              </div>
+            )}
 
-          {step === 3 && pattern && (
-            <div className={styles.confirmTextWrapper}>
+            {step === 4 && (
               <div>
-                <p className={styles.label}>
-                  <span className={ibmPlexMono.className}>Name (Kanji)</span>{" "}
-                  <small>名前 (漢字表記)</small>
-                </p>
-                <p className={styles.confirmText}>{nameJa}</p>
+                {!message ? (
+                  <p>{message}</p>
+                ) : (
+                  <div className={styles.completionMessageContainer}>
+                    <div className={styles.headlineContainer}>
+                      <h2 className={styles.headlineEn}>
+                        Your Business card has been successfully ordered.
+                      </h2>
+                      <h3 className={styles.headlineJa}>
+                        名刺の発注が完了しました。
+                      </h3>
+                    </div>
+                    <div className={styles.noteContainer}>
+                      <p className={styles.noteEn}>
+                        You will receive information on how to receive your
+                        business card, along with an estimated delivery date.
+                      </p>
+                      <p className={styles.noteJa}>
+                        <span className={styles.textBlock}>
+                          名刺はご自身で受け取りが必要です。
+                        </span>
+                        <span className={styles.textBlock}>
+                          納品日は追ってご連絡します。（数日以内に受け取りに行ってください。）
+                        </span>
+                        <span className={styles.textBlock}>
+                          【東京オフィスの方】
+                        </span>
+                        <span className={styles.textBlock}>
+                          名刺の受け取り場所： D-Proサービスセンター40F East{" "}
+                          <br />
+                          (執務室の外にございます)
+                          <br />
+                          営業時間： 平日9:00～18:00
+                          <br />
+                        </span>
+                        <span className={styles.textBlock}>
+                          【関西オフィスの方】 関西オフィスへ発送します。
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
-              <div>
-                <p className={styles.label}>
-                  <span className={ibmPlexMono.className}>Name (Alphabet)</span>{" "}
-                  <small>名前 (アルファベット表記)</small>
-                </p>
-                <p className={styles.confirmText}>{name}</p>
-              </div>
+            )}
 
-              <div>
-                <p className={styles.label}>
-                  <span className={ibmPlexMono.className}>
-                    BUSINESS TITLE(Primary)
-                  </span>{" "}
-                  <small>第１ビジネスタイトル</small>
-                </p>
-                <p className={styles.confirmText}>{roll}</p>
-              </div>
-              <div>
-                <p className={styles.label}>
-                  <span className={ibmPlexMono.className}>
-                    BUSINESS TITLE(Secondary)
-                  </span>{" "}
-                  <small>第２ビジネスタイトル</small>
-                </p>
-                <p className={styles.confirmText}>{secondRoll}</p>
-              </div>
-              <div>
-                <p className={styles.label}>
-                  <span className={ibmPlexMono.className}>Mail</span>{" "}
-                  <small>メールアドレス</small>
-                </p>
-                <p className={styles.confirmText}>{email}</p>
-              </div>
-              <div>
-                <p className={styles.label}>
-                  <span className={ibmPlexMono.className}>Tel</span>{" "}
-                  <small>電話番号</small>
-                </p>
-                <p
-                  className={styles.confirmText}
-                >{`${phone.countryCode} ${phone.number}`}</p>
-              </div>
-              <button
-                className={styles.nextButton}
-                onClick={() => {
-                  handleUpload();
-                  setStep(4);
-                }}
+            {step > 1 && step < 4 && (
+              <div
+                className={styles.backLink}
+                onClick={() => setStep((prev) => prev - 1)}
               >
-                確定して入稿
-              </button>
-            </div>
-          )}
+                <p>戻る</p>
+              </div>
+            )}
+          </div>
+        )}
+        {(innerWidth > 600 || isPreviewMode) && (
+          <div className={styles.rightSideContainer}>
+            <div className={styles.preview}>
+              <div className={ibmPlexMono.className}>
+                <p className={styles.meishiTitle}>FRONT</p>
+                <MeishiOmoteSketch
+                  data={{
+                    name,
+                    nameJa,
+                    roll,
+                    secondRoll,
+                    tel: `${phone.countryCode} ${phone.number}`,
+                    email,
+                  }}
+                  scale={omoteScale}
+                />
+              </div>
 
-          {step === 4 && (
-            <div>
-              {!message ? (
-                <p>{message}</p>
-              ) : (
-                <div className={styles.completionMessageContainer}>
-                  <div className={styles.headlineContainer}>
-                    <h2 className={styles.headlineEn}>
-                      Your Business card has been successfully ordered.
-                    </h2>
-                    <h3 className={styles.headlineJa}>
-                      名刺の発注が完了しました。
-                    </h3>
-                  </div>
-                  <div className={styles.noteContainer}>
-                    <p className={styles.noteEn}>
-                      You will receive information on how to receive your
-                      business card, along with an estimated delivery date.
-                    </p>
-                    <p className={styles.noteJa}>
-                      名刺の受け取り方法は納品予定日とともに別途ご連絡します。
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {step > 1 && step < 4 && (
-            <div
-              className={styles.backLink}
-              onClick={() => setStep((prev) => prev - 1)}
-            >
-              <p>戻る</p>
-            </div>
-          )}
-        </div>
-        <div className={styles.rightSideContainer}>
-          <div className={styles.preview}>
-            <div
-              className={`${styles.meishiContainer} ${ibmPlexMono.className}`}
-            >
-              <p>FRONT</p>
-              <MeishiOmoteSketch
-                data={{
-                  name,
-                  nameJa,
-                  roll,
-                  secondRoll,
-                  tel: `${phone.countryCode} ${phone.number}`,
-                  email,
-                }}
-                scale={omoteScale}
-              />
-            </div>
-
-            <div
-              className={`${styles.meishiContainer} ${ibmPlexMono.className}`}
-            >
-              <p>BACK</p>
-              <MeishiUraSketch data={pattern} scale={uraScale} />
+              <div className={ibmPlexMono.className}>
+                <p className={styles.meishiTitle}>BACK</p>
+                <MeishiUraSketch data={pattern} scale={uraScale} />
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </Layout>
   );

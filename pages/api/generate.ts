@@ -90,7 +90,7 @@ export default async function handler(
 
 \`\`\`json
 {
-  "position": { "x": (数値0~455), "y": (数値0~275) },
+  "position": { "x": (数値0~100), "y": (数値0~100) },
   "size": "xs | s | m | l | xl",
   "grid": { "type": "(isolation | perspective | hybrid)", "detailedness": (1~5) }
 }

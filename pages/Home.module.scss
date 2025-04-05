@@ -134,6 +134,11 @@
   line-height: 4rem;
 }
 
+.textBlock {
+  display: block;
+  margin-bottom: 1rem;
+}
+
 .fileSelectButton {
   background-color: black;
   color: white;
@@ -154,6 +159,16 @@
   font-size: 1.5rem;
   width: 70%;
   display: block;
+}
+
+.inputPairContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 33rem;
+}
+
+.inputPair {
+  width: 47%;
 }
 
 .backLink {
@@ -208,6 +223,10 @@
   align-items: left;
 }
 
+.meishiTitle {
+  margin-bottom: 0.5rem;
+}
+
 .completionMessageContainer {
   margin-top: 3rem;
   display: flex;
@@ -235,5 +254,126 @@
       font-size: 1.2rem;
       line-height: 2rem;
     }
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .main,
+  .leftSideContainer,
+  .rightSideContainer,
+  .verticalGridLayer,
+  .holizonalGridLayer {
+    height: 90vh;
+  }
+  .leftSideContainer,
+  .rightSideContainer {
+    width: 100vw;
+  }
+
+  .leftSideContainer {
+    padding: 5rem 1rem;
+  }
+
+  .label {
+    font-size: 0.8rem;
+    padding: 0.3rem;
+    .small {
+      font-size: 0.6rem;
+    }
+  }
+
+  .confirmText,
+  .inputForm {
+    height: 4rem;
+    padding: 0 1rem;
+    font-size: 1.2rem;
+    width: 100%;
+  }
+
+  .confirmText {
+    width: 100%;
+    line-height: 4rem;
+  }
+
+  .nextButton {
+    height: 4rem;
+    font-size: 1.2rem;
+    right: 0;
+  }
+
+  .inputPairContainer {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .inputPair {
+    width: 49%;
+  }
+
+  .backLink {
+    left: 1rem;
+    height: 4rem;
+    line-height: 4rem;
+  }
+
+  .verticalGridLayer {
+    left: 1rem;
+    width: 80vw;
+  }
+
+  .holizonalGridLayer {
+    left: 1rem;
+    top: 55vh;
+    height: 22vh;
+    width: calc(100vw - 1rem);
+  }
+
+  .imageWrapper {
+    left: 1rem;
+    top: 55vh;
+    width: 80vw;
+    height: 22vh;
+  }
+
+  .questionText {
+    width: 90%;
+    font-size: 1.2rem;
+    margin-top: 3vh;
+  }
+
+  .fileSelectButton {
+    left: 1rem;
+    top: 77vh;
+    height: 3rem;
+    line-height: 3rem;
+    padding: 0 1rem;
+    font-size: 0.9rem;
+  }
+
+  .retryButton {
+    left: 1rem;
+    top: 77vh;
+    height: 3rem;
+    line-height: 3rem;
+  }
+
+  .judgement {
+    width: 80vw;
+  }
+
+  .headlineContainer {
+    .headlineEn {
+      font-size: 1.5rem;
+    }
+
+    .headlineJa {
+      font-size: 1.2rem;
+    }
+  }
+
+  .preview {
+    padding-left: 0;
+    align-items: center;
   }
 }
