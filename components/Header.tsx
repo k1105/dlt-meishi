@@ -10,10 +10,14 @@ export const Header = ({
   step,
   isPreviewMode,
   setIsPreviewMode,
+  isPreviewUpdated,
+  setIsPreviewUpdated,
 }: {
   step: number;
   isPreviewMode: boolean;
   setIsPreviewMode: (isPreviewMode: boolean) => void;
+  isPreviewUpdated: boolean;
+  setIsPreviewUpdated: (isPreviewUpdated: boolean) => void;
 }) => {
   const sceneTitleList = ["FRONT", "BACK", "overview"];
   return (
@@ -43,7 +47,9 @@ export const Header = ({
           className={`${styles.previewSwitcher} ${
             !isPreviewMode && styles.active
           }`}
-          onClick={() => setIsPreviewMode(false)}
+          onClick={() => {
+            setIsPreviewMode(false);
+          }}
         >
           <p>Input</p>
         </div>
@@ -51,9 +57,12 @@ export const Header = ({
           className={`${styles.previewSwitcher} ${
             isPreviewMode && styles.active
           }`}
-          onClick={() => setIsPreviewMode(true)}
+          onClick={() => {
+            setIsPreviewMode(true);
+            setIsPreviewUpdated(false);
+          }}
         >
-          <p>Preview</p>
+          <p className={`${isPreviewUpdated && styles.updated}`}>Preview</p>
         </div>
       </div>
     </>

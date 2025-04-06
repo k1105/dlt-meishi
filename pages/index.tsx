@@ -25,6 +25,8 @@ export default function Home() {
   const [mei, setMei] = useState<string>("");
   const [roll, setRoll] = useState<string>("");
   const [secondRoll, setSecondRoll] = useState<string>("");
+  const [employeeNumber, setEmployeeNumber] = useState<string>("");
+  const [office, setOffice] = useState<string>("");
   const [phone, setPhone] = useState<{
     countryCode: string;
     number: string;
@@ -38,12 +40,13 @@ export default function Home() {
   const [hasValidJsonData, setHasValidJsonData] = useState<boolean>(false);
   const [judgement, setJudgement] = useState("");
   const [isPreviewMode, setIsPreviewMode] = useState<boolean>(false);
+  const [isPreviewUpdated, setIsPreviewUpdated] = useState<boolean>(false);
   const [innerWidth, setInnerWidth] = useState<number>(0);
 
   const [pattern, setPattern] = useState<PatternData>({
     position: {
-      x: 50,
-      y: 50,
+      x: 0,
+      y: 0,
     },
     size: "m",
     grid: {
@@ -59,6 +62,16 @@ export default function Home() {
   useEffect(() => {
     if (window) setInnerWidth(window.innerWidth);
   }, []);
+
+  useEffect(() => {
+    setIsPreviewUpdated(true);
+  }, [pattern, email, phone, name, nameJa, roll, secondRoll]);
+
+  useEffect(() => {
+    if (isPreviewMode) {
+      setIsPreviewUpdated(false);
+    }
+  }, [isPreviewMode]);
 
   useEffect(() => {
     setIsFrontDataValid(
@@ -170,136 +183,145 @@ export default function Home() {
       step={step}
       isPreviewMode={isPreviewMode}
       setIsPreviewMode={setIsPreviewMode}
+      setIsPreviewUpdated={setIsPreviewUpdated}
+      isPreviewUpdated={isPreviewUpdated}
     >
       <div className={`${styles.main} ${inter.className}`}>
         {(innerWidth > 600 || !isPreviewMode) && (
           <div className={styles.leftSideContainer}>
             {step === 1 && (
-              <form
-                className={styles.formContainer}
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  setStep(2);
-                }}
-              >
-                <div className={styles.inputFormWrapper}>
-                  <label>
-                    <p className={styles.label}>
-                      <span className={ibmPlexMono.className}>
-                        Name (Kanji)
-                      </span>
-                      <small>名前 (漢字表記)</small>
-                    </p>
-                    <div className={styles.inputPairContainer}>
-                      <input
-                        className={`${styles.inputPair} ${styles.inputForm}`}
-                        type="text"
-                        value={sei}
-                        onChange={(e) => setSei(e.target.value)}
-                        required
-                        placeholder="姓"
-                      />
-                      <input
-                        className={`${styles.inputPair} ${styles.inputForm}`}
-                        type="text"
-                        value={mei}
-                        onChange={(e) => setMei(e.target.value)}
-                        required
-                        placeholder="名"
-                      />
-                    </div>
-                  </label>
-                  <label>
-                    <p className={styles.label}>
-                      <span className={ibmPlexMono.className}>
-                        Name (Alphabet)
-                      </span>{" "}
-                      <small>名前 (アルファベット表記)</small>
-                    </p>
-                    <div className={styles.inputPairContainer}>
-                      <input
-                        className={`${styles.inputPair} ${styles.inputForm}`}
-                        type="text"
-                        value={lastName}
-                        onChange={(e) =>
-                          setLastName(e.target.value.toUpperCase())
-                        }
-                        required
-                        placeholder="LAST NAME"
-                      />
-                      <input
-                        className={`${styles.inputPair} ${styles.inputForm}`}
-                        type="text"
-                        value={firstName}
-                        onChange={(e) =>
-                          setFirstName(e.target.value.toUpperCase())
-                        }
-                        required
-                        placeholder="FIRST NAME"
-                      />
-                    </div>
-                  </label>
-
-                  <label>
-                    <p className={styles.label}>
-                      <span className={ibmPlexMono.className}>
-                        BUSINESS TITLE(Primary)
-                      </span>{" "}
-                      <small>第１ビジネスタイトル</small>
-                    </p>
-                    <input
-                      type="text"
-                      value={roll}
-                      onChange={(e) => setRoll(e.target.value.toUpperCase())}
-                      className={styles.inputForm}
-                      required
-                    />
-                  </label>
-
-                  <label>
-                    <p className={styles.label}>
-                      <span className={ibmPlexMono.className}>
-                        BUSINESS TITLE(Secondary)
-                      </span>
-                      <small>第２ビジネスタイトル</small>
-                    </p>
-                    <input
-                      type="text"
-                      value={secondRoll}
-                      onChange={(e) =>
-                        setSecondRoll(e.target.value.toUpperCase())
-                      }
-                      className={styles.inputForm}
-                    />
-                  </label>
-
-                  <label>
-                    <p className={styles.label}>
-                      <span className={ibmPlexMono.className}>Mail</span>{" "}
-                      <small>メールアドレス</small>
-                    </p>
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className={styles.inputForm}
-                      required
-                    />
-                  </label>
-
-                  {/* 電話番号入力コンポーネント */}
-                  <PhoneInput phone={phone} setPhone={setPhone} />
-                </div>
-
-                <button
-                  className={`${styles.nextButton} ${
-                    !isFrontDataValid && styles.disabled
-                  }`}
-                  type="submit"
+              <div>
+                <p className={styles.infoText}>
+                  <span className={styles.segment}>まずは、</span>
+                  <span className={styles.segment}>表面の情報を</span>
+                  <span className={styles.segment}>入力します。</span>
+                </p>
+                <form
+                  className={styles.formContainer}
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    setStep(2);
+                  }}
                 >
-                  次へ
-                </button>
-              </form>
+                  <div className={styles.inputFormWrapper}>
+                    <label>
+                      <p className={`${styles.label} ${styles.required}`}>
+                        <span className={ibmPlexMono.className}>
+                          Name (Kanji)
+                        </span>
+                        <small>名前 (漢字表記)</small>
+                      </p>
+                      <div className={styles.inputPairContainer}>
+                        <input
+                          className={`${styles.inputPair} ${styles.inputForm}`}
+                          type="text"
+                          value={sei}
+                          onChange={(e) => setSei(e.target.value)}
+                          required
+                          placeholder="姓"
+                        />
+                        <input
+                          className={`${styles.inputPair} ${styles.inputForm}`}
+                          type="text"
+                          value={mei}
+                          onChange={(e) => setMei(e.target.value)}
+                          required
+                          placeholder="名"
+                        />
+                      </div>
+                    </label>
+                    <label>
+                      <p className={`${styles.label} ${styles.required}`}>
+                        <span className={ibmPlexMono.className}>
+                          Name (Alphabet)
+                        </span>{" "}
+                        <small>名前 (アルファベット表記)</small>
+                      </p>
+                      <div className={styles.inputPairContainer}>
+                        <input
+                          className={`${styles.inputPair} ${styles.inputForm}`}
+                          type="text"
+                          value={lastName}
+                          onChange={(e) =>
+                            setLastName(e.target.value.toUpperCase())
+                          }
+                          required
+                          placeholder="LAST NAME"
+                        />
+                        <input
+                          className={`${styles.inputPair} ${styles.inputForm}`}
+                          type="text"
+                          value={firstName}
+                          onChange={(e) =>
+                            setFirstName(e.target.value.toUpperCase())
+                          }
+                          required
+                          placeholder="FIRST NAME"
+                        />
+                      </div>
+                    </label>
+
+                    <label>
+                      <p className={`${styles.label} ${styles.required}`}>
+                        <span className={ibmPlexMono.className}>
+                          BUSINESS TITLE(Primary)
+                        </span>{" "}
+                        <small>第１ビジネスタイトル</small>
+                      </p>
+                      <input
+                        type="text"
+                        value={roll}
+                        onChange={(e) => setRoll(e.target.value.toUpperCase())}
+                        className={styles.inputForm}
+                        required
+                      />
+                    </label>
+
+                    <label>
+                      <p className={styles.label}>
+                        <span className={ibmPlexMono.className}>
+                          BUSINESS TITLE(Secondary)
+                        </span>
+                        <small>第２ビジネスタイトル</small>
+                      </p>
+                      <input
+                        type="text"
+                        value={secondRoll}
+                        onChange={(e) =>
+                          setSecondRoll(e.target.value.toUpperCase())
+                        }
+                        className={styles.inputForm}
+                      />
+                    </label>
+
+                    <label>
+                      <p className={`${styles.label} ${styles.required}`}>
+                        <span className={ibmPlexMono.className}>Mail</span>{" "}
+                        <small>メールアドレス</small>
+                      </p>
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className={styles.inputForm}
+                        required
+                      />
+                    </label>
+
+                    {/* 電話番号入力コンポーネント */}
+                    <PhoneInput phone={phone} setPhone={setPhone} />
+                  </div>
+
+                  <button
+                    className={`${styles.nextButton} ${
+                      !isFrontDataValid && styles.disabled
+                    }`}
+                    type="submit"
+                  >
+                    次へ
+                  </button>
+                </form>
+              </div>
             )}
 
             {step === 2 && (
@@ -310,13 +332,22 @@ export default function Home() {
                   <div className={styles.judgement}>
                     <h3>あなたについて</h3>
                     <p>{judgement}</p>
+                    {innerWidth < 600 && (
+                      <p>
+                        ※
+                        生成された名刺デザインはPreviewタブを押してご確認ください。
+                      </p>
+                    )}
                   </div>
                 ) : (
                   <div>
-                    <p className={styles.questionText}>{question}</p>
-                    <p>
-                      写真から抽出された特徴をもとに、裏面のデザインを生成します。
+                    <p className={styles.infoText}>
+                      <span className={styles.segment}>写真から抽出された</span>
+                      <span className={styles.segment}>情報をもとに</span>
+                      <span className={styles.segment}>裏面のデザインを</span>
+                      <span className={styles.segment}>生成します。</span>
                     </p>
+                    <p className={styles.questionText}>{question}</p>
                   </div>
                 )}
                 {/* 見えないinput */}
@@ -352,12 +383,6 @@ export default function Home() {
                   </div>
                 )}
 
-                {/**
-                 * もし「ファイル名を表示」したくなったらここで `file?.name` を表示する。
-                 * 現在は「ファイル名不要」とのことなので表示しない。
-                 */}
-                {/* {file && <p>{file.name}</p>} */}
-
                 <div className={styles.imageWrapper}>
                   {preview && (
                     <Image
@@ -392,6 +417,9 @@ export default function Home() {
 
             {step === 3 && pattern && (
               <div className={styles.confirmTextWrapper}>
+                <p className={styles.infoText}>
+                  入力情報に間違いがないか、ご確認ください。
+                </p>
                 <div>
                   <p className={styles.label}>
                     <span className={ibmPlexMono.className}>Name (Kanji)</span>{" "}
@@ -446,16 +474,56 @@ export default function Home() {
                 <button
                   className={styles.nextButton}
                   onClick={() => {
-                    handleUpload();
                     setStep(4);
                   }}
                 >
-                  確定して入稿
+                  次へ
                 </button>
               </div>
             )}
 
             {step === 4 && (
+              <div>
+                <p className={styles.infoText}>
+                  名刺の発注に必要な情報を入力してください。
+                </p>
+                <form className={styles.formContainer}>
+                  <div className={styles.inputFormWrapper}>
+                    <label>
+                      <p>社員番号</p>
+                      <input
+                        type="text"
+                        className={styles.inputForm}
+                        value={employeeNumber}
+                        onChange={(e) => setEmployeeNumber(e.target.value)}
+                      />
+                    </label>
+                    <label>
+                      <p>勤務地</p>
+                      <select
+                        className={styles.inputForm}
+                        value={office}
+                        onChange={(e) => setOffice(e.target.value)}
+                      >
+                        <option value="東京">東京</option>
+                        <option value="大阪">大阪</option>
+                      </select>
+                    </label>
+                  </div>
+                  <button
+                    className={styles.nextButton}
+                    onClick={() => {
+                      handleUpload();
+                      setStep(5);
+                    }}
+                  >
+                    確定して入稿
+                  </button>
+                </form>
+              </div>
+            )}
+
+            {step === 5 && (
               <div>
                 {!message ? (
                   <p>{message}</p>
@@ -502,7 +570,7 @@ export default function Home() {
               </div>
             )}
 
-            {step > 1 && step < 4 && (
+            {step > 1 && step < 5 && (
               <div
                 className={styles.backLink}
                 onClick={() => setStep((prev) => prev - 1)}

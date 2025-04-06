@@ -67,7 +67,7 @@ export default function PhoneInput({phone, setPhone}: PhoneInputProps) {
 
   return (
     <label>
-      <p className={styles.label}>
+      <p className={`${styles.label} ${styles.required}`}>
         <span className={ibmPlexMono.className}>Tel</span>{" "}
         <small>電話番号</small>
       </p>

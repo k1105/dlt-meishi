@@ -13,6 +13,21 @@
   bottom: 0;
 }
 
+.segment {
+  display: inline-block;
+}
+
+.required::after {
+  content: "*";
+  color: red;
+}
+
+.infoText {
+  font-size: 1.5rem;
+  margin-bottom: 3rem;
+  font-weight: 700;
+}
+
 .leftSideContainer,
 .rightSideContainer {
   width: 50vw;
@@ -271,7 +286,12 @@
   }
 
   .leftSideContainer {
-    padding: 5rem 1rem;
+    padding: 10rem 1rem;
+  }
+
+  .rightSideContainer {
+    padding: 0;
+    padding-top: 3rem;
   }
 
   .label {
