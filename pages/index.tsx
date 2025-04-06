@@ -26,7 +26,7 @@ export default function Home() {
   const [roll, setRoll] = useState<string>("");
   const [secondRoll, setSecondRoll] = useState<string>("");
   const [employeeNumber, setEmployeeNumber] = useState<string>("");
-  const [office, setOffice] = useState<string>("");
+  const [office, setOffice] = useState<string>("tokyo");
   const [phone, setPhone] = useState<{
     countryCode: string;
     number: string;
@@ -42,6 +42,10 @@ export default function Home() {
   const [isPreviewMode, setIsPreviewMode] = useState<boolean>(false);
   const [isPreviewUpdated, setIsPreviewUpdated] = useState<boolean>(false);
   const [innerWidth, setInnerWidth] = useState<number>(0);
+  const [error, setError] = useState<{
+    statusCode: number;
+    message: string;
+  } | null>(null);
 
   const [pattern, setPattern] = useState<PatternData>({
     position: {
@@ -75,9 +79,12 @@ export default function Home() {
 
   useEffect(() => {
     setIsFrontDataValid(
-      name.length > 0 && roll.length > 0 && phone.number.length > 0
+      name.length > 0 &&
+        roll.length > 0 &&
+        email.length > 0 &&
+        phone.number.length > 0
     );
-  }, [name, roll, phone]);
+  }, [name, roll, phone, email]);
 
   useEffect(() => {
     if (innerWidth < 600) {
@@ -153,28 +160,35 @@ export default function Home() {
   // 最終的に Dropbox へデータ送信
   const handleUpload = async () => {
     setMessage("アップロード中...");
+    setError(null);
 
     const response = await fetch("/api/upload", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({
         name,
+        nameJa,
         roll,
         secondRoll,
         tel: `${phone.countryCode} ${phone.number}`,
         email,
         pattern,
+        employeeNumber,
+        office,
       }),
     });
 
     const data = await response.json();
-    if (data.success) {
+    if (response.ok) {
       setDropboxPath(data.dropboxPath);
       setMessage(
         `✅ アップロード成功！Dropbox に保存されました: ${data.dropboxPath}`
       );
     } else {
-      setMessage(`❌ アップロード失敗: ${data.error}`);
+      setError({
+        statusCode: response.status,
+        message: "エラーが発生しました。",
+      });
     }
   };
 
@@ -485,7 +499,7 @@ export default function Home() {
             {step === 4 && (
               <div>
                 <p className={styles.infoText}>
-                  名刺の発注に必要な情報を入力してください。
+                  最後に、名刺の発注に必要な情報を入力してください。
                 </p>
                 <form className={styles.formContainer}>
                   <div className={styles.inputFormWrapper}>
@@ -495,6 +509,7 @@ export default function Home() {
                         type="text"
                         className={styles.inputForm}
                         value={employeeNumber}
+                        placeholder="例: d12345"
                         onChange={(e) => setEmployeeNumber(e.target.value)}
                       />
                     </label>
@@ -505,13 +520,15 @@ export default function Home() {
                         value={office}
                         onChange={(e) => setOffice(e.target.value)}
                       >
-                        <option value="東京">東京</option>
-                        <option value="大阪">大阪</option>
+                        <option value="tokyo">東京</option>
+                        <option value="osaka">大阪</option>
                       </select>
                     </label>
                   </div>
                   <button
-                    className={styles.nextButton}
+                    className={`${styles.nextButton} ${
+                      employeeNumber.length === 0 && styles.disabled
+                    }`}
                     onClick={() => {
                       handleUpload();
                       setStep(5);
@@ -527,6 +544,19 @@ export default function Home() {
               <div>
                 {!message ? (
                   <p>{message}</p>
+                ) : error ? (
+                  <div className={styles.completionMessageContainer}>
+                    <h3 className={styles.errorTitle}>{error.message}</h3>
+                    <div className={styles.errorMessage}>
+                      <p>ステータスコード：{error.statusCode}</p>
+                      <p>
+                        この画面が表示された場合、開発担当者（1CRP DLT 1部 山岸
+                        奏大）にまでご連絡ください。
+                      </p>
+                      <p>メールアドレス：</p>
+                      <p>yamagishi.kanata@dentsu.co.jp</p>
+                    </div>
+                  </div>
                 ) : (
                   <div className={styles.completionMessageContainer}>
                     <div className={styles.headlineContainer}>
