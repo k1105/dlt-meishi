@@ -49,13 +49,13 @@ export default function Home() {
 
   const [pattern, setPattern] = useState<PatternData>({
     position: {
-      x: 0,
-      y: 0,
+      x: 50,
+      y: 50,
     },
-    size: "m",
+    size: "xs",
     grid: {
-      type: "hybrid",
-      detailedness: 3,
+      type: "isolation",
+      detailedness: 5,
     },
   });
   const [preview, setPreview] = useState<string | null>(null);

@@ -16,23 +16,23 @@ export default function MeishiUraSketch({
   scale: number;
 }) {
   const baseScale = 2;
-  // NextReactP5Wrapper を SSR 無効で動的にインポート
-  // p5.js のスケッチ関数（インスタンスモード）
+  const minimumGridSize = 4.96 * baseScale;
+  const maxGridSize = minimumGridSize * 4;
+
   const sketch = useCallback(
     (p: P5CanvasInstance) => {
-      // p.data は P5Wrapper から渡される data プロパティです。
-      // 例：{ position: { x: 220, y: 160 }, size: "m", grid: { type: "scale", detailedness: 6 } }
       let displayData = data as PatternData;
       // サイズリスト（ロゴサイズの定義）
       const sizeList: Record<string, number> = {
-        xl: 2.7775 * baseScale,
-        l: 2.3142 * baseScale,
-        m: 1.8513 * baseScale,
-        s: 1.3883 * baseScale,
-        xs: 0.9258 * baseScale,
+        xl: maxGridSize * 6,
+        l: maxGridSize * 5,
+        m: maxGridSize * 4,
+        s: maxGridSize * 3,
+        xs: maxGridSize * 2,
       };
 
       const meishiSize = {w: 257.95 * baseScale, h: 155.91 * baseScale};
+      const offset = 34.02 * baseScale;
       let logoImage: Image;
       let imageX: number, imageY: number;
 
@@ -47,31 +47,36 @@ export default function MeishiUraSketch({
       p.setup = function () {
         p.createCanvas(266.54 * baseScale, 164.46 * baseScale);
         p.strokeCap(p.SQUARE);
-        console.log("logosize, width: ", logoImage.width / 10);
-        console.log("logosize, height: ", logoImage.height / 10);
       };
 
       p.draw = function () {
-        const imageScale = displayData.size ? sizeList[displayData.size] : 1;
+        const targetImageHeight = displayData.size
+          ? sizeList[displayData.size]
+          : sizeList["m"];
+        const imageScale = (targetImageHeight / logoImage.height) * 10;
         const styleType = displayData.grid.type;
         const detailedness = displayData.grid.detailedness;
         const logoSize = {
           w: (logoImage.width / 10) * imageScale,
-          h: (logoImage.height / 10) * imageScale,
+          h: targetImageHeight,
         };
+        const unitSize = minimumGridSize * detailedness;
 
         p.noStroke();
         p.background(230);
         // Slider の値を表示
         p.textSize(15);
         imageX =
-          ((displayData.position.x * 257.95) / 100) * baseScale -
-          logoSize.w / 2;
+          offset +
+          ((meishiSize.w - offset * 2 - logoSize.w) * displayData.position.x) /
+            100;
         imageY =
-          ((displayData.position.y * 155.91) / 100) * baseScale -
-          logoSize.h / 2;
-        imageX = p.max(34.02, p.min(imageX, meishiSize.w - logoSize.w - 34.02));
-        imageY = p.max(34.02, p.min(imageY, meishiSize.h - logoSize.h - 34.02));
+          offset +
+          ((meishiSize.h - offset * 2 - logoSize.h) * displayData.position.y) /
+            100;
+
+        imageX = p.floor(imageX / unitSize) * unitSize;
+        imageY = p.floor(imageY / unitSize) * unitSize;
 
         const rectCorners = {
           lt: {x: imageX, y: imageY},
@@ -107,7 +112,7 @@ export default function MeishiUraSketch({
         } else if (styleType === "isolation") {
           drawIsolationGrid(p, meishiSize, rectCorners, imageScale);
         } else if (styleType === "hybrid") {
-          drawHybridGrid(p, meishiSize, rectCorners, detailedness);
+          drawHybridGrid(p, meishiSize, rectCorners, unitSize);
         }
         p.pop();
 
@@ -118,13 +123,7 @@ export default function MeishiUraSketch({
         p.push();
         p.noStroke();
         p.translate(imageX, imageY);
-        p.image(
-          logoImage,
-          0,
-          0,
-          (logoImage.width / 10) * imageScale,
-          (logoImage.height / 10) * imageScale
-        );
+        p.image(logoImage, 0, 0, logoSize.w, logoSize.h);
         p.pop();
         p.pop();
 

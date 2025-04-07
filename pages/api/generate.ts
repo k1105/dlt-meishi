@@ -68,9 +68,9 @@ export default async function handler(
 
 1. **回答者の性格やものづくりに対する姿勢を想像し、1～3行で「あなたについて」を述べる。**
 2. **次に、「JSON形式」で出力する。** 出力の中に説明文を混在させない。
-3. **ロゴサイズ (size) は必ず \ xs, s, m, l, xl\ のいずれか。**  
+3. **ロゴサイズ (size) は必ず \ xs, s, m, l\ のいずれか。**  
    - 繊細な印象を受ける→\ xs\ or \ s\    
-   - 非常にポジティブな印象、ボールドな印象→\ l\ or \ xl\  
+   - 非常にポジティブな印象、ボールドな印象→\ l\ 
    - 回答者からは上記のような印象を受けない→\ m\
 4. **position.x は 0～100, position.y は 0～100。**
    - 明快でボールドな印象、正統派の印象の場合は中央付近に配置する: x=50, y=50.
@@ -79,10 +79,10 @@ export default async function handler(
    - 「チームワークが好きな人」→perspective
    - 「一つの指針を考える人」→isolation  
    - 「きめ細やかな人」→hybrid
-6. **grid.detailedness は 1～5 で設定。**  
-   - 繊細な性格→ 4~5  
-   - 大胆、ざっくりした性格→ 1~2
-7. **極端な性格の場合: sizeをxsかxlにし、positionも端へ寄せる。**
+6. **grid.detailedness は 1～4 で設定。**  
+   - 繊細な性格→ 1
+   - 大胆、ざっくりした性格→ 4
+7. **極端な性格の場合: sizeをxsかlにし、positionも端へ寄せる。**
 
 #### **出力フォーマット**
 まず **あなたについて** を1～3行で説明する。
@@ -91,8 +91,8 @@ export default async function handler(
 \`\`\`json
 {
   "position": { "x": (数値0~100), "y": (数値0~100) },
-  "size": "xs | s | m | l | xl",
-  "grid": { "type": "(isolation | perspective | hybrid)", "detailedness": (1~5) }
+  "size": "xs | s | m | l",
+  "grid": { "type": "(isolation | perspective | hybrid)", "detailedness": (1~4) }
 }
 `;
 

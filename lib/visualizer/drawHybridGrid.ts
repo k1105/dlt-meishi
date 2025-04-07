@@ -9,11 +9,8 @@ export const drawHybridGrid = (
     lb: {x: number; y: number};
     rb: {x: number; y: number};
   },
-  detailedness: number
+  unitSize: number
 ) => {
-  const minimumGridSize = 18.425;
-  const unitSize = (minimumGridSize * (6 - detailedness)) / 2;
-
   p.line(
     Math.ceil(rectCorners.lt.x / unitSize) * unitSize,
     0,

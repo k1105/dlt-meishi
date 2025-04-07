@@ -1,6 +1,7 @@
 import type {P5CanvasInstance} from "@p5-wrapper/react";
 import {NextReactP5Wrapper} from "@p5-wrapper/next";
 import {useCallback} from "react";
+import type p5 from "p5";
 
 export default function MeishiOmoteSketch({
   data,
@@ -15,6 +16,7 @@ export default function MeishiOmoteSketch({
   const sketch = useCallback(
     (p: P5CanvasInstance) => {
       let displayData = data as ProfileData;
+      let qrSvg: p5.Image;
 
       // 名刺サイズ (SVGオリジナルの 257.95 x 155.91) に baseScale を掛けたもの
       const cardW = 257.95 * baseScale;
@@ -53,6 +55,7 @@ export default function MeishiOmoteSketch({
       p.preload = () => {
         // カスタムフォントを使うならここで読み込み
         // font = p.loadFont("/fonts/IBMPlexMono-Regular.ttf");
+        qrSvg = p.loadImage("/qr.svg");
       };
 
       p.setup = function () {
@@ -177,6 +180,16 @@ export default function MeishiOmoteSketch({
         p.fill(26, 11, 8);
         p.textSize(6.5 * baseScale);
         p.text(displayData.tel, 23.76 * baseScale, 139.01 * baseScale);
+
+        // ---------- QRコード ----------
+        const qrSize = 28.35 * baseScale; // QRコードの元のサイズにbaseScaleを掛ける
+        p.image(
+          qrSvg,
+          194.972 * baseScale,
+          109.2866 * baseScale,
+          qrSize,
+          qrSize
+        );
       };
     },
     [data]
