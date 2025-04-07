@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, useMemo} from "react";
 import Image from "next/image";
 import {handleImageChange} from "@/lib/handleImageChange";
 import MeishiOmoteSketch from "@/components/MeishiOmoteSketch";
@@ -62,6 +62,18 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [, setDropboxPath] = useState<string | null>(null);
   const [message, setMessage] = useState("");
+
+  const frontData = useMemo(
+    () => ({
+      name,
+      nameJa,
+      roll,
+      secondRoll,
+      tel: `${phone.countryCode} ${phone.number}`,
+      email,
+    }),
+    [name, nameJa, roll, secondRoll, phone, email]
+  );
 
   useEffect(() => {
     if (window) setInnerWidth(window.innerWidth);
@@ -615,17 +627,7 @@ export default function Home() {
             <div className={styles.preview}>
               <div className={ibmPlexMono.className}>
                 <p className={styles.meishiTitle}>FRONT</p>
-                <MeishiOmoteSketch
-                  data={{
-                    name,
-                    nameJa,
-                    roll,
-                    secondRoll,
-                    tel: `${phone.countryCode} ${phone.number}`,
-                    email,
-                  }}
-                  scale={omoteScale}
-                />
+                <MeishiOmoteSketch data={frontData} scale={omoteScale} />
               </div>
 
               <div className={ibmPlexMono.className}>

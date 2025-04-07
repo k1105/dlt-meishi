@@ -19,120 +19,112 @@ export default function MeishiUraSketch({
   const minimumGridSize = 4.96 * baseScale;
   const maxGridSize = minimumGridSize * 4;
 
-  const sketch = useCallback(
-    (p: P5CanvasInstance) => {
-      let displayData = data as PatternData;
-      // サイズリスト（ロゴサイズの定義）
-      const sizeList: Record<string, number> = {
-        xl: maxGridSize * 6,
-        l: maxGridSize * 5,
-        m: maxGridSize * 4,
-        s: maxGridSize * 3,
-        xs: maxGridSize * 2,
+  const sketch = useCallback((p: P5CanvasInstance) => {
+    let displayData = data as PatternData;
+    // サイズリスト（ロゴサイズの定義）
+    const sizeList: Record<string, number> = {
+      xl: maxGridSize * 6,
+      l: maxGridSize * 5,
+      m: maxGridSize * 4,
+      s: maxGridSize * 3,
+      xs: maxGridSize * 2,
+    };
+
+    const meishiSize = {w: 257.95 * baseScale, h: 155.91 * baseScale};
+    const offset = 34.02 * baseScale;
+    let logoImage: Image;
+    let imageX: number, imageY: number;
+
+    p.updateWithProps = (props) => {
+      displayData = props.data as PatternData;
+    };
+
+    p.preload = function () {
+      logoImage = p.loadImage("/dl_logo.png");
+    };
+
+    p.setup = function () {
+      p.createCanvas(266.54 * baseScale, 164.46 * baseScale);
+      p.strokeCap(p.SQUARE);
+    };
+
+    p.draw = function () {
+      const targetImageHeight = displayData.size
+        ? sizeList[displayData.size]
+        : sizeList["m"];
+      const imageScale = (targetImageHeight / logoImage.height) * 10;
+      const styleType = displayData.grid.type;
+      const detailedness = displayData.grid.detailedness;
+      const logoSize = {
+        w: (logoImage.width / 10) * imageScale,
+        h: targetImageHeight,
+      };
+      const unitSize = minimumGridSize * detailedness;
+
+      p.noStroke();
+      p.background(230);
+      // Slider の値を表示
+      p.textSize(15);
+      imageX =
+        offset +
+        ((meishiSize.w - offset * 2 - logoSize.w) * displayData.position.x) /
+          100;
+      imageY =
+        offset +
+        ((meishiSize.h - offset * 2 - logoSize.h) * displayData.position.y) /
+          100;
+
+      imageX = p.floor(imageX / unitSize) * unitSize;
+      imageY = p.floor(imageY / unitSize) * unitSize;
+
+      const rectCorners = {
+        lt: {x: imageX, y: imageY},
+        lb: {x: imageX, y: imageY + logoSize.h},
+        rt: {x: imageX + logoSize.w, y: imageY},
+        rb: {x: imageX + logoSize.w, y: imageY + logoSize.h},
       };
 
-      const meishiSize = {w: 257.95 * baseScale, h: 155.91 * baseScale};
-      const offset = 34.02 * baseScale;
-      let logoImage: Image;
-      let imageX: number, imageY: number;
+      // 名刺のベースとなる矩形を描く
+      p.push();
+      p.translate(p.width / 2, p.height / 2);
+      p.rect(-meishiSize.w / 2, -meishiSize.h / 2, meishiSize.w, meishiSize.h);
+      p.translate(-meishiSize.w / 2, -meishiSize.h / 2);
+      p.stroke(100);
+      p.strokeWeight(0.3);
 
-      p.updateWithProps = (props) => {
-        displayData = props.data as PatternData;
-      };
-
-      p.preload = function () {
-        logoImage = p.loadImage("/dl_logo.png");
-      };
-
-      p.setup = function () {
-        p.createCanvas(266.54 * baseScale, 164.46 * baseScale);
-        p.strokeCap(p.SQUARE);
-      };
-
-      p.draw = function () {
-        const targetImageHeight = displayData.size
-          ? sizeList[displayData.size]
-          : sizeList["m"];
-        const imageScale = (targetImageHeight / logoImage.height) * 10;
-        const styleType = displayData.grid.type;
-        const detailedness = displayData.grid.detailedness;
-        const logoSize = {
-          w: (logoImage.width / 10) * imageScale,
-          h: targetImageHeight,
-        };
-        const unitSize = minimumGridSize * detailedness;
-
-        p.noStroke();
-        p.background(230);
-        // Slider の値を表示
-        p.textSize(15);
-        imageX =
-          offset +
-          ((meishiSize.w - offset * 2 - logoSize.w) * displayData.position.x) /
-            100;
-        imageY =
-          offset +
-          ((meishiSize.h - offset * 2 - logoSize.h) * displayData.position.y) /
-            100;
-
-        imageX = p.floor(imageX / unitSize) * unitSize;
-        imageY = p.floor(imageY / unitSize) * unitSize;
-
-        const rectCorners = {
-          lt: {x: imageX, y: imageY},
-          lb: {x: imageX, y: imageY + logoSize.h},
-          rt: {x: imageX + logoSize.w, y: imageY},
-          rb: {x: imageX + logoSize.w, y: imageY + logoSize.h},
-        };
-
-        // 名刺のベースとなる矩形を描く
-        p.push();
-        p.translate(p.width / 2, p.height / 2);
-        p.rect(
-          -meishiSize.w / 2,
-          -meishiSize.h / 2,
-          meishiSize.w,
-          meishiSize.h
+      p.push();
+      // グリッドのスタイルごとに描画処理を分岐
+      if (styleType === "perspective") {
+        drawPerspectiveGrid(
+          p,
+          meishiSize,
+          rectCorners,
+          imageX,
+          imageY,
+          logoSize
         );
-        p.translate(-meishiSize.w / 2, -meishiSize.h / 2);
-        p.stroke(100);
-        p.strokeWeight(0.3);
+      } else if (styleType === "isolation") {
+        drawIsolationGrid(p, meishiSize, rectCorners, imageScale);
+      } else if (styleType === "hybrid") {
+        drawHybridGrid(p, meishiSize, rectCorners, unitSize);
+      }
+      p.pop();
 
-        p.push();
-        // グリッドのスタイルごとに描画処理を分岐
-        if (styleType === "perspective") {
-          drawPerspectiveGrid(
-            p,
-            meishiSize,
-            rectCorners,
-            imageX,
-            imageY,
-            logoSize
-          );
-        } else if (styleType === "isolation") {
-          drawIsolationGrid(p, meishiSize, rectCorners, imageScale);
-        } else if (styleType === "hybrid") {
-          drawHybridGrid(p, meishiSize, rectCorners, unitSize);
-        }
-        p.pop();
+      // マスク用の長方形
+      p.fill(230);
+      p.noStroke();
+      p.rect(meishiSize.w, -p.height, p.width, 2 * p.height);
+      p.push();
+      p.noStroke();
+      p.translate(imageX, imageY);
+      p.image(logoImage, 0, 0, logoSize.w, logoSize.h);
+      p.pop();
+      p.pop();
 
-        // マスク用の長方形
-        p.fill(230);
-        p.noStroke();
-        p.rect(meishiSize.w, -p.height, p.width, 2 * p.height);
-        p.push();
-        p.noStroke();
-        p.translate(imageX, imageY);
-        p.image(logoImage, 0, 0, logoSize.w, logoSize.h);
-        p.pop();
-        p.pop();
-
-        // p.save("meishi_ura.svg");
-        p.noLoop();
-      };
-    },
-    [data]
-  );
+      // p.save("meishi_ura.svg");
+      p.noLoop();
+    };
+  }, []);
 
   return (
     <div
