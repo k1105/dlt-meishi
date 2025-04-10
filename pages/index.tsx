@@ -50,16 +50,16 @@ export default function Home() {
   const [pattern, setPattern] = useState<PatternData>({
     position: {
       x: 50,
-      y: 50,
+      y: 60,
     },
-    size: "xs",
+    size: "l",
     grid: {
-      type: "isolation",
+      type: "hybrid",
       detailedness: 5,
     },
   });
   const [preview, setPreview] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [, setDropboxPath] = useState<string | null>(null);
   const [message, setMessage] = useState("");
 
@@ -171,36 +171,47 @@ export default function Home() {
 
   // 最終的に Dropbox へデータ送信
   const handleUpload = async () => {
+    setLoading(true);
     setMessage("アップロード中...");
     setError(null);
 
-    const response = await fetch("/api/upload", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({
-        name,
-        nameJa,
-        roll,
-        secondRoll,
-        tel: `${phone.countryCode} ${phone.number}`,
-        email,
-        pattern,
-        employeeNumber,
-        office,
-      }),
-    });
-
-    const data = await response.json();
-    if (response.ok) {
-      setDropboxPath(data.dropboxPath);
-      setMessage(
-        `✅ アップロード成功！Dropbox に保存されました: ${data.dropboxPath}`
-      );
-    } else {
-      setError({
-        statusCode: response.status,
-        message: "エラーが発生しました。",
+    try {
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          name,
+          nameJa,
+          roll,
+          secondRoll,
+          tel: `${phone.countryCode} ${phone.number}`,
+          email,
+          pattern,
+          employeeNumber,
+          office,
+        }),
       });
+
+      const data = await response.json();
+      if (response.ok) {
+        setDropboxPath(data.dropboxPath);
+        setMessage(
+          `✅ アップロード成功！Dropbox に保存されました: ${data.dropboxPath}`
+        );
+        setStep(5);
+      } else {
+        setError({
+          statusCode: response.status,
+          message: "エラーが発生しました。",
+        });
+      }
+    } catch (error) {
+      setError({
+        statusCode: 500,
+        message: `エラーが発生しました。エラーの詳細：${error}`,
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -523,6 +534,7 @@ export default function Home() {
                         value={employeeNumber}
                         placeholder="例: d12345"
                         onChange={(e) => setEmployeeNumber(e.target.value)}
+                        disabled={loading}
                       />
                     </label>
                     <label>
@@ -531,22 +543,30 @@ export default function Home() {
                         className={styles.inputForm}
                         value={office}
                         onChange={(e) => setOffice(e.target.value)}
+                        disabled={loading}
                       >
                         <option value="tokyo">東京</option>
                         <option value="osaka">大阪</option>
                       </select>
                     </label>
                   </div>
+                  {loading && (
+                    <div className={styles.loadingContainer}>
+                      <div className={styles.loadingSpinner} />
+                      <p className={styles.loadingText}>アップロード中...</p>
+                    </div>
+                  )}
                   <button
                     className={`${styles.nextButton} ${
-                      employeeNumber.length === 0 && styles.disabled
+                      (employeeNumber.length === 0 || loading) &&
+                      styles.disabled
                     }`}
                     onClick={() => {
                       handleUpload();
-                      setStep(5);
                     }}
+                    disabled={employeeNumber.length === 0 || loading}
                   >
-                    確定して入稿
+                    {loading ? "アップロード中..." : "確定して入稿"}
                   </button>
                 </form>
               </div>

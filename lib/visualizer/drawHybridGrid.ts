@@ -31,9 +31,9 @@ export const drawHybridGrid = (
   );
   p.line(
     0,
-    Math.ceil(rectCorners.rb.y / unitSize) * unitSize,
+    Math.floor(rectCorners.rb.y / unitSize) * unitSize,
     Math.ceil(rectCorners.rb.x / unitSize) * unitSize,
-    Math.ceil(rectCorners.rb.y / unitSize) * unitSize
+    Math.floor(rectCorners.rb.y / unitSize) * unitSize
   );
   let step = 1;
 

@@ -152,8 +152,6 @@ export default function MeishiOmoteSketch({
         : displayData.roll;
       p.text(businessTitle, 23.56 * baseScale, 59.76 * baseScale);
 
-      p.text("DENTSU LAB TOKYO", 23.56 * baseScale, 69.76 * baseScale);
-
       // ---------- E-MAIL ----------
       p.fill(149, 148, 149);
       p.textSize(4.5 * baseScale);
