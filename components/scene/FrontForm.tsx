@@ -98,18 +98,20 @@ export const FrontForm = ({
             </p>
             <div className={styles.inputPairContainer}>
               <input
-                className={`${styles.inputPair} ${styles.inputForm}`}
+                className={`${styles.inputPair} ${styles.inputForm} ${styles.upperCaseInput}`}
                 type="text"
                 value={lastName}
-                onChange={(e) => setLastName(e.target.value.toUpperCase())}
+                onChange={(e) => setLastName(e.target.value)}
+                onBlur={(e) => setLastName(e.target.value.toUpperCase())}
                 required
                 placeholder="LAST NAME"
               />
               <input
-                className={`${styles.inputPair} ${styles.inputForm}`}
+                className={`${styles.inputPair} ${styles.inputForm} ${styles.upperCaseInput}`}
                 type="text"
                 value={firstName}
-                onChange={(e) => setFirstName(e.target.value.toUpperCase())}
+                onChange={(e) => setFirstName(e.target.value)}
+                onBlur={(e) => setFirstName(e.target.value.toUpperCase())}
                 required
                 placeholder="FIRST NAME"
               />
@@ -126,8 +128,9 @@ export const FrontForm = ({
             <input
               type="text"
               value={roll}
-              onChange={(e) => setRoll(e.target.value.toUpperCase())}
-              className={styles.inputForm}
+              onChange={(e) => setRoll(e.target.value)}
+              onBlur={(e) => setRoll(e.target.value.toUpperCase())}
+              className={`${styles.inputForm} ${styles.upperCaseInput}`}
               required
               placeholder="BUSINESS TITLE"
             />
@@ -143,8 +146,9 @@ export const FrontForm = ({
             <input
               type="text"
               value={secondRoll}
-              onChange={(e) => setSecondRoll(e.target.value.toUpperCase())}
-              className={styles.inputForm}
+              onChange={(e) => setSecondRoll(e.target.value)}
+              onBlur={(e) => setSecondRoll(e.target.value.toUpperCase())}
+              className={`${styles.inputForm} ${styles.upperCaseInput}`}
               placeholder="BUSINESS TITLE"
             />
           </label>

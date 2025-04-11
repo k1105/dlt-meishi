@@ -141,7 +141,7 @@ export default function MeishiOmoteSketch({
       p.fill(35, 24, 21); // #231815
       p.textSize(nameEnSize);
       p.text(
-        displayData.name,
+        displayData.name.toUpperCase(),
         nameBaseX + nameJaWidth + nameGapBase,
         47.3 * baseScale
       );
@@ -150,8 +150,8 @@ export default function MeishiOmoteSketch({
       p.fill(149, 148, 149); // #949495
       p.textSize(6 * baseScale);
       const businessTitle = displayData.secondRoll
-        ? `${displayData.roll} / ${displayData.secondRoll}`
-        : displayData.roll;
+        ? `${displayData.roll.toUpperCase()} / ${displayData.secondRoll.toUpperCase()}`
+        : displayData.roll.toUpperCase();
       p.text(businessTitle, 23.56 * baseScale, 59.76 * baseScale);
 
       // ---------- E-MAIL ----------
