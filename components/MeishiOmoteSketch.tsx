@@ -14,7 +14,7 @@ export default function MeishiOmoteSketch({
   const baseScale = 2;
 
   const sketch = useCallback((p: P5CanvasInstance) => {
-    let displayData = data as ProfileData;
+    let displayData: ProfileData;
     let qrSvg: p5.Image;
 
     // 名刺サイズ (SVGオリジナルの 257.95 x 155.91) に baseScale を掛けたもの
@@ -47,8 +47,10 @@ export default function MeishiOmoteSketch({
 
     // Props 更新時にデータを再代入
     p.updateWithProps = (props) => {
-      displayData = props.data as ProfileData;
-      p.redraw(); // データ変化時に再描画
+      if ((props.data as ProfileData).name !== "") {
+        displayData = props.data as ProfileData;
+        p.redraw(); // データ変化時に再描画
+      }
     };
 
     p.preload = () => {
