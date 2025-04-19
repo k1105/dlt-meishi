@@ -11,14 +11,11 @@ export default async function handler(
 
   try {
     // ローカルサーバーに名刺情報を送信
-    const response = await fetch(
-      "https://meishi-backend-xn5r.onrender.com/generate",
-      {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(req.body),
-      }
-    );
+    const response = await fetch("http://localhost:4000/generate", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(req.body),
+    });
 
     const data = await response.json();
     res.status(response.status).json(data);

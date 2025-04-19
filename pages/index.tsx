@@ -8,7 +8,7 @@ import styles from "./Home.module.scss";
 import {Inter} from "next/font/google";
 import {IBM_Plex_Mono} from "next/font/google";
 import {FrontForm} from "@/components/scene/FrontForm";
-import IntroductionModal from "@/components/IntroductionModal";
+// import IntroductionModal from "@/components/IntroductionModal";
 
 // const interBold = Inter({subsets: ["latin"], weight: "700"});
 const inter = Inter({subsets: ["latin"], weight: "400"});
@@ -124,7 +124,7 @@ export default function Home() {
   }, [sei, mei]);
 
   useEffect(() => {
-    setName(`${lastName} ${firstName}`);
+    setName(`${firstName} ${lastName}`);
   }, [firstName, lastName]);
 
   // OpenAI API でデザイン生成
@@ -224,7 +224,7 @@ export default function Home() {
       setIsPreviewUpdated={setIsPreviewUpdated}
       isPreviewUpdated={isPreviewUpdated}
     >
-      <IntroductionModal />
+      {/* <IntroductionModal /> */}
       <div className={`${styles.main} ${inter.className}`}>
         {(innerWidth > 600 || !isPreviewMode) && (
           <div className={styles.leftSideContainer}>
